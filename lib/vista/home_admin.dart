@@ -1,0 +1,225 @@
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:avance1/vista/pantalla_login.dart';
+import 'package:avance1/anuncios.dart';
+import 'package:avance1/perfil.dart';
+import 'package:avance1/admin/credenciales.dart';
+import 'package:avance1/admin/asignaciones.dart';
+import 'package:avance1/admin/reportes.dart';
+
+class HomeAdmin extends StatefulWidget {
+  const HomeAdmin({super.key});
+
+  @override
+  _HomeAdminState createState() => _HomeAdminState();
+}
+
+class _HomeAdminState extends State<HomeAdmin> {
+  int _selectedIndex = 0;
+
+  // Lista de pantallas del admin
+  final List<Widget> _pages = [
+    const HomeAdminContent(), // Pantalla principal
+    const AnunciosScreen(), // Pantalla de anuncios
+    const PerfilScreen(), // Pantalla de perfil
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: _pages[_selectedIndex], // Muestra la pantalla seleccionada
+      appBar: AppBar(
+        title: const Text("Panel Admin"),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout, size: 30),
+            onPressed: () async {
+              final SharedPreferences prefs =
+                  await SharedPreferences.getInstance();
+              await prefs
+                  .clear(); // Borra todas las claves/valores de SharedPreferences
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const PantallaLogin()),
+              );
+            },
+          ),
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Inicio'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.announcement),
+            label: 'Anuncios',
+          ),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Perfil'),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: const Color.fromARGB(255, 100, 200, 236),
+        onTap: _onItemTapped,
+      ),
+    );
+  }
+}
+
+class HomeAdminContent extends StatelessWidget {
+  const HomeAdminContent({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 40),
+          // Encabezado con nombre de usuario y avatar
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Bienvenido, Jim Halpert",
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    "Martes 17/Marzo/2025",
+                    style: TextStyle(fontSize: 16, color: Colors.grey),
+                  ),
+                ],
+              ),
+              const CircleAvatar(
+                radius: 30,
+                backgroundImage: AssetImage("assets/profile.jpg"),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          // Contenedor de información
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: const [
+                BoxShadow(color: Colors.black12, blurRadius: 5),
+              ],
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _buildInfoItem("Estudiantes", "25"),
+                _buildInfoItem("Maestros", "70"),
+              ],
+            ),
+          ),
+          const SizedBox(height: 20),
+          // Título de la sección de tareas
+          const Text(
+            "Tareas",
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 10),
+          // Contenedor de tareas
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: const [
+                  BoxShadow(color: Colors.black12, blurRadius: 5),
+                ],
+              ),
+              child: Column(
+                children: [
+                  _buildTaskRow(context, Icons.person, "Credenciales", () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const CredencialesScreen(),
+                      ),
+                    );
+                  }),
+                  const SizedBox(height: 16),
+                  _buildTaskRow(context, Icons.assignment, "Asignaciones", () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const AsignacionesScreen(),
+                      ),
+                    );
+                  }),
+                  const SizedBox(height: 16),
+                  _buildTaskRow(context, Icons.bar_chart, "Reportes", () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ReportesScreen(),
+                      ),
+                    );
+                  }),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInfoItem(String title, String value) {
+    return Column(
+      children: [
+        Text(
+          value,
+          style: const TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: Color.fromARGB(255, 100, 200, 236),
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(title, style: const TextStyle(fontSize: 16, color: Colors.grey)),
+      ],
+    );
+  }
+
+  Widget _buildTaskRow(
+    BuildContext context,
+    IconData icon,
+    String title,
+    VoidCallback onTap,
+  ) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: const Color.fromARGB(255, 100, 200, 236),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, size: 24, color: Colors.white),
+          ),
+          const SizedBox(width: 16),
+          Text(
+            title,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+        ],
+      ),
+    );
+  }
+}
