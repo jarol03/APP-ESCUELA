@@ -1,3 +1,5 @@
+import 'package:avance1/firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -10,7 +12,9 @@ import 'package:avance1/vista/home_maestro.dart';
 import 'package:avance1/vista/home_estudiante.dart';
 import 'package:avance1/vista/pantalla_login.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(AppPrincipal());
 }
 

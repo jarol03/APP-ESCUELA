@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1098109051681",
+    "project_id": "app-escuela-cbd50",
+    "storage_bucket": "app-escuela-cbd50.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1098109051681:android:79d752d3c063505af65460",
+        "android_client_info": {
+          "package_name": "com.example.avance1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBuhGqIelENB9wRHjvUB4aW_ESyn5XEtuk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
