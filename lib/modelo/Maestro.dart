@@ -24,4 +24,38 @@ class Maestro {
     required this.rol, // Rol es requerido
     required this.materias,
   });
+
+  // Convertir a Map para Firestore
+  Map<String, dynamic> toMap() {
+    return {
+      "id": id,
+      "nombre": nombre,
+      "apellido": apellido,
+      "gradoAsignado": gradoAsignado,
+      "tipoMaestro": tipoMaestro,
+      "email": email,
+      "telefono": telefono,
+      "usuario": usuario,
+      "contrasena": contrasena,
+      "rol": rol,
+      "materias": materias,
+    };
+  }
+
+  // Convertir desde Map
+  factory Maestro.fromMap(Map<String, dynamic> data) {
+    return Maestro(
+      id: data["id"],
+      nombre: data["nombre"],
+      apellido: data["apellido"],
+      gradoAsignado: data["gradoAsignado"],
+      tipoMaestro: data["tipoMaestro"],
+      email: data["email"],
+      telefono: data["telefono"],
+      usuario: data["usuario"],
+      contrasena: data["contrasena"],
+      rol: data["rol"],
+      materias: List<String>.from(data["materias"]),
+    );
+  }
 }
