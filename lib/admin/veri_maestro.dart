@@ -20,7 +20,6 @@ class _VeriMaestroScreenState extends State<VeriMaestroScreen> {
       telefono: "123456789",
       usuario: "carlos123",
       contrasena: "password",
-      rol: "Maestro", // Rol agregado
       materias: [],
     ),
     Maestro(
@@ -33,7 +32,6 @@ class _VeriMaestroScreenState extends State<VeriMaestroScreen> {
       telefono: "987654321",
       usuario: "ana123",
       contrasena: "password",
-      rol: "Maestro", // Rol agregado
       materias: [],
     ),
     // Agregar más maestros aquí

@@ -3,55 +3,83 @@ import '../modelo/Alumno.dart';
 import '../modelo/Maestro.dart';
 
 class FirebaseController {
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final FirebaseFirestore base = FirebaseFirestore.instance;
 
-  // 📌 REGISTRAR UN ALUMNO
-  Future<void> registrarAlumno(Alumno alumno) async {
+  Future<void> agregarAlumno(Alumno alumno) async {
     try {
-      await _db.collection('alumnos').doc(alumno.id).set(alumno.toMap());
+      await base.collection('alumnos').doc(alumno.id).set(alumno.toMap());
     } catch (e) {
       print("Error al registrar alumno: $e");
     }
   }
 
-  // 📌 REGISTRAR UN MAESTRO
-  Future<void> registrarMaestro(Maestro maestro) async {
+  Future<void> agregarMaestro(Maestro maestro) async {
     try {
-      await _db.collection('maestros').doc(maestro.id).set(maestro.toMap());
+      await base.collection('maestros').doc(maestro.id).set(maestro.toMap());
     } catch (e) {
       print("Error al registrar maestro: $e");
     }
   }
 
-  // 📌 INICIAR SESIÓN (VERIFICA EN FIRESTORE)
-  Future<String?> iniciarSesion(String usuario, String contrasena) async {
-    try {
-      // Buscar en alumnos
-      QuerySnapshot alumnos = await _db
-          .collection("alumnos")
-          .where("usuario", isEqualTo: usuario)
-          .where("contrasena", isEqualTo: contrasena)
-          .get();
+  Future<Alumno?> buscarAlumno(String usuario, String contrasena) async {
+    //BUSCAMOS EN LA "TABLA" alumnos Y POR UNA "CONSULTA" COMO EN SQL BUSCANDO EN LOS VALORES USUARIO Y CONTRASEÑA
+    //SI LO ENCUENTRA LO OBTIENE Y SE ASIGNA A querySnapshot
+    QuerySnapshot querySnapshot = await base.collection('alumnos')
+      .where('usuario', isEqualTo: usuario) // Filtramos por el usuario
+      .where('contrasena', isEqualTo: contrasena) // Filtramos por la contraseña
+      .get();
 
-      if (alumnos.docs.isNotEmpty) {
-        return "Alumno";
+      //SI NO ESTÁ VACÍO O SEA QUE SI ENCONTRÓ ALGO, GUARDAMOS LA "TABLA" EN ESTE CASO DOCUMENTO PARA FIRESTORE
+      //Y OBTENEMOS EL PRIMER RESULTADO, CREAMOS UN ALUMNO MEDIANTE UN CONSTRUCTOR ESPECIAL
+      //QUE RECIBE UN Map<String, dynamic> PORQUE CONVERTIMOS LA DATA DEL DOCUMENTO A UN Map<String, dynamic>
+      //Y RETORNAMOS ESE ALUMNO, SI NO RETORNARÁ NULL
+      if (querySnapshot.docs.isNotEmpty) {
+        var alumnoDoc = querySnapshot.docs.first;
+        Alumno alumno = Alumno.fromMap(alumnoDoc.data() as Map<String, dynamic>);
+        return alumno;
       }
 
-      // Buscar en maestros
-      QuerySnapshot maestros = await _db
-          .collection("maestros")
-          .where("usuario", isEqualTo: usuario)
-          .where("contrasena", isEqualTo: contrasena)
-          .get();
-
-      if (maestros.docs.isNotEmpty) {
-        return "Maestro";
-      }
-
-      return null; // Usuario no encontrado
-    } catch (e) {
-      print("Error al iniciar sesión: $e");
       return null;
+    }
+
+    Future<Maestro?> buscarMaestro(String usuario, String contrasena) async {
+    QuerySnapshot querySnapshot = await base.collection('maestros')
+      .where('usuario', isEqualTo: usuario)
+      .where('contrasena', isEqualTo: contrasena)
+      .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        var maestroDoc = querySnapshot.docs.first;
+        Maestro maestro = Maestro.fromMap(maestroDoc.data() as Map<String, dynamic>);
+        return maestro;
+      }
+
+      return null;
+    }
+
+  Future<List<Alumno>> obtenerAlumnos() async {
+    try {
+      QuerySnapshot querySnapshot = await base.collection('alumnos').get();
+      List<Alumno> alumnos = querySnapshot.docs.map((doc) {
+        return Alumno.fromMap(doc.data() as Map<String, dynamic>);
+      }).toList();
+      return alumnos;
+    } catch (e) {
+      print("Error al obtener alumnos: $e");
+      return [];
+    }
+  }
+
+  Future<List<Maestro>> obtenerMaestros() async {
+    try {
+      QuerySnapshot querySnapshot = await base.collection('maestros').get();
+      List<Maestro> maestros = querySnapshot.docs.map((doc) {
+        return Maestro.fromMap(doc.data() as Map<String, dynamic>);
+      }).toList();
+      return maestros;
+    } catch (e) {
+      print("Error al obtener maestros: $e");
+      return [];
     }
   }
 }

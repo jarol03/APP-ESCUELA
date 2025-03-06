@@ -25,7 +25,6 @@ class _AsigMaestroScreenState extends State<AsigMaestroScreen> {
       telefono: "123456789",
       usuario: "carlos123",
       contrasena: "password",
-      rol: "Maestro", // Rol agregado
       materias: [],
     ),
     // Agregar más maestros aquí

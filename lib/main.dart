@@ -1,4 +1,6 @@
+import 'package:avance1/controlador/FireBase_Controller.dart';
 import 'package:avance1/firebase_options.dart';
+import 'package:avance1/modelo/Alumno.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -44,6 +46,12 @@ class _PantallaCargaState extends State<PantallaCarga> {
   void initState() {
     super.initState();
     print("Pantalla de carga iniciada");
+
+    Alumno harold = Alumno(id: "HASF", nombre: "Harold", apellido: "Espinal", grado: "Octavo", email: "haroldespinal23@gmail.com", telefono: "87897057", usuario: "harold.e", contrasena: "messi", nota: "100", active: true, materias: []);
+    Maestro ever = Maestro(id: "HSYQX", nombre: "Ever", apellido: "Torres", gradoAsignado: "Décimo", tipoMaestro: "Matemáticas", email: "Ever@gmail.com", telefono: "1234556", usuario: "Ever.M", contrasena: "ever123", materias: []);
+    FirebaseController firebase = FirebaseController();
+    firebase.agregarAlumno(harold);
+    firebase.agregarMaestro(ever);
     _verificarSesion();
   }
 
@@ -89,7 +97,6 @@ class _PantallaCargaState extends State<PantallaCarga> {
               telefono: "123456789",
               usuario: "maestro123",
               contrasena: "password",
-              rol: "maestro",
               materias: [],
             ),
           );

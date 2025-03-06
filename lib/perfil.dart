@@ -40,7 +40,6 @@ class _PerfilScreenState extends State<PerfilScreen> {
           usuario: "carlos123",
           contrasena: "password",
           materias: ["Matemáticas", "Ciencias"],
-          rol: "maestro",
         );
       });
     } else if (rol == "alumno") {

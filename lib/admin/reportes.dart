@@ -56,7 +56,6 @@ class _ReportesScreenState extends State<ReportesScreen> {
       usuario: "carlos123",
       contrasena: "password",
       materias: ["Matemáticas", "Ciencias"],
-      rol: "maestro",
     ),
     // Agregar más maestros aquí
   ];

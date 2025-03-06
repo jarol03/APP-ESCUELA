@@ -33,7 +33,6 @@ class _ClasesEstudianteScreenState extends State<ClasesEstudianteScreen> {
       telefono: "123456789",
       usuario: "carlos123",
       contrasena: "password",
-      rol: "maestro",
       materias: ["1"],
     ),
     // Agregar más maestros aquí
@@ -110,7 +109,6 @@ class _ClasesEstudianteScreenState extends State<ClasesEstudianteScreen> {
                           telefono: "",
                           usuario: "",
                           contrasena: "",
-                          rol: "",
                           materias: [],
                         ),
                   );

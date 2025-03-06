@@ -10,6 +10,7 @@ class Alumno {
   final String nota;
   final bool active;
   final List<String> materias; // Lista de IDs de materias
+  final String rol = "alumno";
 
   Alumno({
     required this.id,

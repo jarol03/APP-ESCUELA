@@ -206,7 +206,7 @@ class _CrearMaestroScreenState extends State<CrearMaestroScreen> {
         telefono: _telefonoController.text,
         usuario: _usuarioController.text,
         contrasena: _contrasenaController.text,
-        rol: _rolController.text, // Asignar el rol
+        //rol: _rolController.text, // Asignar el rol
         materias: [], // Aquí puedes agregar las materias asignadas
       );
 

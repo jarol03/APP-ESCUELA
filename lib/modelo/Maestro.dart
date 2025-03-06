@@ -1,5 +1,5 @@
 class Maestro {
-  final String id; // Identificador único
+  final String id; // Identificador único DNI
   final String nombre;
   final String apellido;
   final String gradoAsignado; // Grado asignado
@@ -8,8 +8,8 @@ class Maestro {
   final String telefono;
   final String usuario;
   final String contrasena;
-  final String rol;
   final List<String> materias; // Lista de IDs de materias
+  final String rol = "maestro";
 
   Maestro({
     required this.id,
@@ -21,7 +21,6 @@ class Maestro {
     required this.telefono,
     required this.usuario,
     required this.contrasena,
-    required this.rol, // Rol es requerido
     required this.materias,
   });
 
@@ -54,7 +53,6 @@ class Maestro {
       telefono: data["telefono"],
       usuario: data["usuario"],
       contrasena: data["contrasena"],
-      rol: data["rol"],
       materias: List<String>.from(data["materias"]),
     );
   }

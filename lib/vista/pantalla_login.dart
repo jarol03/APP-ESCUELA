@@ -1,9 +1,11 @@
+import 'package:avance1/controlador/FireBase_Controller.dart';
+import 'package:avance1/modelo/Alumno.dart';
+import 'package:avance1/modelo/Maestro.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:avance1/vista/home_admin.dart';
 import 'package:avance1/vista/home_maestro.dart';
 import 'package:avance1/vista/home_estudiante.dart';
-import 'package:avance1/modelo/Maestro.dart';
 
 class PantallaLogin extends StatefulWidget {
   const PantallaLogin({super.key});
@@ -15,60 +17,40 @@ class PantallaLogin extends StatefulWidget {
 class _PantallaLoginState extends State<PantallaLogin> {
   final TextEditingController _usuarioController = TextEditingController();
   final TextEditingController _contrasenaController = TextEditingController();
-
-  final Map<String, Map<String, String>> usuarios = {
-    "admin": {"contrasena": "admin123", "rol": "admin"},
-    "maestro": {"contrasena": "maestro123", "rol": "maestro"},
-    "estudiante": {"contrasena": "estudiante123", "rol": "estudiante"},
-  };
+  final FirebaseController _firebaseController = FirebaseController();
 
   void manejarInicioSesion() async {
     final String usuario = _usuarioController.text.trim();
     final String contrasena = _contrasenaController.text.trim();
 
-    if (usuarios.containsKey(usuario) &&
-        usuarios[usuario]!["contrasena"] == contrasena) {
-      final String rol = usuarios[usuario]!["rol"]!;
+    // Buscar primero al alumno
+    final Alumno? alumno = await _firebaseController.buscarAlumno(usuario, contrasena);
+    
+    // Si no lo encontramos, buscar al maestro
+    final Maestro? maestro = alumno == null ? await _firebaseController.buscarMaestro(usuario, contrasena) : null;
 
+    if (alumno != null) {
+      // Si encontramos al alumno, guardar la sesión
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setBool('sesionIniciada', true);
-      await prefs.setString('rolUsuario', rol);
-
-      Widget pantalla;
-      switch (rol) {
-        case "admin":
-          pantalla = HomeAdmin();
-          break;
-        case "maestro":
-          pantalla = HomeMaestro(
-            maestro: Maestro(
-              id: "12345678",
-              nombre: "Nombre del Maestro",
-              apellido: "Apellido del Maestro",
-              gradoAsignado: "Grado 1",
-              tipoMaestro: "Maestro guía",
-              email: "maestro@example.com",
-              telefono: "123456789",
-              usuario: "maestro123",
-              contrasena: "maestro123",
-              materias: [],
-              rol: "maestro",
-            ),
-          );
-          break;
-        case "estudiante":
-          pantalla = HomeEstudiante();
-          break;
-        default:
-          pantalla = HomeEstudiante();
-          break;
-      }
+      await prefs.setString('rolUsuario', 'Alumno');
 
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => pantalla),
+        MaterialPageRoute(builder: (context) => HomeEstudiante()),  // Redirige al HomeEstudiante
+      );
+    } else if (maestro != null) {
+      // Si encontramos al maestro, guardar la sesión
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('sesionIniciada', true);
+      await prefs.setString('rolUsuario', 'Maestro');
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomeMaestro(maestro: maestro)),  // Redirige al HomeMaestro
       );
     } else {
+      // Si no encontramos al usuario ni como alumno ni como maestro
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text("Usuario o contraseña incorrectos"),
