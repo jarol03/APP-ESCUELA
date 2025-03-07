@@ -6,19 +6,11 @@ class FirebaseController {
   final FirebaseFirestore base = FirebaseFirestore.instance;
 
   Future<void> agregarAlumno(Alumno alumno) async {
-    try {
-      await base.collection('alumnos').doc(alumno.id).set(alumno.toMap());
-    } catch (e) {
-      print("Error al registrar alumno: $e");
-    }
+    await base.collection('alumnos').doc(alumno.id).set(alumno.toMap());
   }
 
   Future<void> agregarMaestro(Maestro maestro) async {
-    try {
-      await base.collection('maestros').doc(maestro.id).set(maestro.toMap());
-    } catch (e) {
-      print("Error al registrar maestro: $e");
-    }
+    await base.collection('maestros').doc(maestro.id).set(maestro.toMap());
   }
 
   Future<Alumno?> buscarAlumno(String usuario, String contrasena) async {

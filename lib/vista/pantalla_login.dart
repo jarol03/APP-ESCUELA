@@ -24,10 +24,16 @@ class _PantallaLoginState extends State<PantallaLogin> {
     final String contrasena = _contrasenaController.text.trim();
 
     // Buscar primero al alumno
-    final Alumno? alumno = await _firebaseController.buscarAlumno(usuario, contrasena);
-    
+    final Alumno? alumno = await _firebaseController.buscarAlumno(
+      usuario,
+      contrasena,
+    );
+
     // Si no lo encontramos, buscar al maestro
-    final Maestro? maestro = alumno == null ? await _firebaseController.buscarMaestro(usuario, contrasena) : null;
+    final Maestro? maestro =
+        alumno == null
+            ? await _firebaseController.buscarMaestro(usuario, contrasena)
+            : null;
 
     if (alumno != null) {
       // Si encontramos al alumno, guardar la sesión
@@ -37,7 +43,9 @@ class _PantallaLoginState extends State<PantallaLogin> {
 
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => HomeEstudiante()),  // Redirige al HomeEstudiante
+        MaterialPageRoute(
+          builder: (context) => HomeEstudiante(),
+        ), // Redirige al HomeEstudiante
       );
     } else if (maestro != null) {
       // Si encontramos al maestro, guardar la sesión
@@ -47,7 +55,14 @@ class _PantallaLoginState extends State<PantallaLogin> {
 
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => HomeMaestro(maestro: maestro)),  // Redirige al HomeMaestro
+        MaterialPageRoute(
+          builder: (context) => HomeMaestro(maestro: maestro),
+        ), // Redirige al HomeMaestro
+      );
+    } else if (usuario == "admin" && contrasena == "admin123") {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomeAdmin()),
       );
     } else {
       // Si no encontramos al usuario ni como alumno ni como maestro
