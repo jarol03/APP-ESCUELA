@@ -1,3 +1,4 @@
+import 'package:avance1/controlador/FireBase_Controller.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:avance1/vista/pantalla_login.dart';
@@ -13,6 +14,7 @@ class CrearEstudianteScreen extends StatefulWidget {
 }
 
 class _CrearEstudianteScreenState extends State<CrearEstudianteScreen> {
+  final FirebaseController fireBaseController = FirebaseController();
   final _formKey = GlobalKey<FormState>();
   final _idController = TextEditingController(); // Campo para el ID
   final _nombreController = TextEditingController();
@@ -207,6 +209,8 @@ class _CrearEstudianteScreenState extends State<CrearEstudianteScreen> {
         materias: [],
         active: _active,
       );
+
+      fireBaseController.agregarAlumno(estudiante);
 
       // Lógica para guardar o actualizar el estudiante
       print(
