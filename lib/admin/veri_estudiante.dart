@@ -35,7 +35,7 @@ class _VeriEstudianteScreenState extends State<VeriEstudianteScreen> {
               estudiante.nombre.toLowerCase().contains(
                 _searchQuery.toLowerCase(),
               ) ||
-              estudiante.grado.toLowerCase().contains(
+              estudiante.grado.nombre.toLowerCase().contains(
                 _searchQuery.toLowerCase(),
               ),
         )

@@ -1,4 +1,5 @@
 import 'package:avance1/controlador/FireBase_Controller.dart';
+import 'package:avance1/modelo/Grado.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:avance1/vista/pantalla_login.dart';
@@ -14,7 +15,7 @@ class CrearEstudianteScreen extends StatefulWidget {
 }
 
 class _CrearEstudianteScreenState extends State<CrearEstudianteScreen> {
-  final FirebaseController fireBaseController = FirebaseController();
+  final FirebaseController baseDatos = FirebaseController();
   final _formKey = GlobalKey<FormState>();
   final _idController = TextEditingController(); // Campo para el ID
   final _nombreController = TextEditingController();
@@ -25,8 +26,17 @@ class _CrearEstudianteScreenState extends State<CrearEstudianteScreen> {
   final _contrasenaController = TextEditingController();
   final _notaController = TextEditingController();
   bool _active = true; // Estado activo/inactivo
-  String? _gradoSeleccionado;
-  final List<String> _grados = ["Grado 1", "Grado 2", "Grado 3", "Grado 4"];
+  Grado? _gradoSeleccionado;
+  final List<Grado> _grados = [
+    Grado(id: "01", nombre: "1A"),
+    Grado(id: "02", nombre: "2A"),
+    Grado(id: "03", nombre: "3A"),
+    Grado(id: "04", nombre: "4A"),
+    Grado(id: "05", nombre: "5A"),
+    Grado(id: "06", nombre: "6A"),
+    Grado(id: "06", nombre: "7A"),
+    Grado(id: "06", nombre: "8A"),
+  ];
 
   @override
   void initState() {
@@ -174,24 +184,27 @@ class _CrearEstudianteScreenState extends State<CrearEstudianteScreen> {
   }
 
   Widget _buildDropdown(
-    String label,
-    List<String> items,
-    String? value,
-    Function(String?) onChanged,
-  ) {
-    return DropdownButtonFormField<String>(
-      value: value,
-      decoration: InputDecoration(
-        labelText: label,
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-      ),
-      items:
-          items.map((item) {
-            return DropdownMenuItem(value: item, child: Text(item));
-          }).toList(),
-      onChanged: onChanged,
-    );
-  }
+  String label,
+  List<Grado> items, // Cambiar String por Grado
+  Grado? value,
+  Function(Grado?) onChanged,
+) {
+  return DropdownButtonFormField<Grado>( // Cambiar String por Grado
+    value: value,
+    decoration: InputDecoration(
+      labelText: label,
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+    ),
+    items: items.map((item) {
+      return DropdownMenuItem<Grado>( // Cambiar String por Grado
+        value: item,
+        child: Text(item.nombre), // Mostrar el nombre del grado
+      );
+    }).toList(),
+    onChanged: onChanged,
+  );
+}
+
 
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
@@ -210,7 +223,16 @@ class _CrearEstudianteScreenState extends State<CrearEstudianteScreen> {
         active: _active,
       );
 
-      fireBaseController.agregarAlumno(estudiante);
+      baseDatos.agregarAlumno(estudiante);
+
+      _idController.clear();
+      _nombreController.clear();
+      _apellidoController.clear();
+      _emailController.clear();
+      _telefonoController.clear();
+      _usuarioController.clear();
+      _contrasenaController.clear();
+      _notaController.clear();
 
       // Lógica para guardar o actualizar el estudiante
       print(

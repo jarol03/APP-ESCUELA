@@ -1,8 +1,11 @@
+import 'package:avance1/modelo/Alumno.dart';
+import 'package:avance1/modelo/Materia.dart';
+
 class Grado {
-  final String id; // Identificador único
+  final String id;
   final String nombre;
-  final List<String> alumnos; // Lista de IDs de alumnos
-  final List<String> materias; // Lista de IDs de materias
+  final List<Alumno> alumnos; // Lista de objetos Alumno
+  final List<Materia> materias; // Lista de objetos Materia
 
   Grado({
     required this.id,
@@ -10,4 +13,24 @@ class Grado {
     this.alumnos = const [],
     this.materias = const [],
   });
+
+  // Convertir a Map para Firestore
+  Map<String, dynamic> toMap() {
+    return {
+      "id": id,
+      "nombre": nombre,
+      "alumnos": alumnos.map((a) => a.toMap()).toList(), // Convertir lista de Alumno a lista de Map
+      "materias": materias.map((m) => m.toMap()).toList(), // Convertir lista de Materia a lista de Map
+    };
+  }
+
+  // Convertir desde Map
+  factory Grado.fromMap(Map<String, dynamic> data) {
+    return Grado(
+      id: data["id"],
+      nombre: data["nombre"],
+      alumnos: (data["alumnos"] as List).map((a) => Alumno.fromMap(a)).toList(), // Convertir lista de Map a lista de objetos Alumno
+      materias: (data["materias"] as List).map((m) => Materia.fromMap(m)).toList(), // Convertir lista de Map a lista de objetos Materia
+    );
+  }
 }

@@ -39,19 +39,24 @@ class _PantallaLoginState extends State<PantallaLogin> {
       // Si encontramos al alumno, guardar la sesión
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setBool('sesionIniciada', true);
-      await prefs.setString('rolUsuario', 'Alumno');
+      await prefs.setString('rolUsuario', alumno.rol);
+      await prefs.setString('idUsuario', alumno.id); // Guardar el ID del alumno
 
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => HomeEstudiante(),
+          builder: (context) => HomeEstudiante(alumno: alumno,),
         ), // Redirige al HomeEstudiante
       );
     } else if (maestro != null) {
       // Si encontramos al maestro, guardar la sesión
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setBool('sesionIniciada', true);
-      await prefs.setString('rolUsuario', 'Maestro');
+      await prefs.setString('rolUsuario', maestro.rol);
+      await prefs.setString(
+        'idUsuario',
+        maestro.id,
+      ); // Guardar el ID del alumno
 
       Navigator.pushReplacement(
         context,

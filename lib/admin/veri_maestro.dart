@@ -1,3 +1,4 @@
+import 'package:avance1/controlador/FireBase_Controller.dart';
 import 'package:flutter/material.dart';
 import 'package:avance1/modelo/Maestro.dart';
 
@@ -9,44 +10,23 @@ class VeriMaestroScreen extends StatefulWidget {
 }
 
 class _VeriMaestroScreenState extends State<VeriMaestroScreen> {
-  final List<Maestro> _maestros = [
-    Maestro(
-      id: "12345678",
-      nombre: "Carlos Sánchez",
-      apellido: "Gómez",
-      gradoAsignado: "Grado 1",
-      tipoMaestro: "Maestro guía",
-      email: "carlos@example.com",
-      telefono: "123456789",
-      usuario: "carlos123",
-      contrasena: "password",
-      materias: [],
-    ),
-    Maestro(
-      id: "87654321",
-      nombre: "Ana Torres",
-      apellido: "López",
-      gradoAsignado: "Grado 2",
-      tipoMaestro: "Maestro general",
-      email: "ana@example.com",
-      telefono: "987654321",
-      usuario: "ana123",
-      contrasena: "password",
-      materias: [],
-    ),
-    // Agregar más maestros aquí
-  ];
+  FirebaseController baseDatos = FirebaseController();
+  List<Maestro> maestros = [];
+
+  Future<void> obtenerMaestros() async {
+    maestros = await baseDatos.obtenerMaestros();
+  }
 
   String _searchQuery = "";
 
   List<Maestro> get _filteredMaestros {
-    return _maestros
+    return maestros
         .where(
           (maestro) =>
               maestro.nombre.toLowerCase().contains(
                 _searchQuery.toLowerCase(),
               ) ||
-              maestro.gradoAsignado.toLowerCase().contains(
+              maestro.gradosAsignados[0].nombre.toLowerCase().contains(
                 _searchQuery.toLowerCase(),
               ),
         )
@@ -86,7 +66,7 @@ class _VeriMaestroScreenState extends State<VeriMaestroScreen> {
                     margin: const EdgeInsets.only(bottom: 16),
                     child: ListTile(
                       title: Text("${maestro.nombre} ${maestro.apellido}"),
-                      subtitle: Text("Grado: ${maestro.gradoAsignado}"),
+                      subtitle: Text("Grado: ${maestro.gradosAsignados}"),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [

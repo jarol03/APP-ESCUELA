@@ -13,6 +13,40 @@ class FirebaseController {
     await base.collection('maestros').doc(maestro.id).set(maestro.toMap());
   }
 
+  // Método para buscar un Alumno por id
+  Future<Alumno?> buscarAlumnoPorId(String id) async {
+    try {
+      DocumentSnapshot docSnapshot = await base.collection('alumnos').doc(id).get();
+
+      // Si el documento existe
+      if (docSnapshot.exists) {
+        return Alumno.fromMap(docSnapshot.data() as Map<String, dynamic>);
+      } else {
+        return null; // Si no existe, retorna null
+      }
+    } catch (e) {
+      print("Error al buscar el alumno por ID: $e");
+      return null;
+    }
+  }
+
+  Future<Maestro?> buscarMaestroPorId(String id) async {
+    try {
+      DocumentSnapshot docSnapshot = await base.collection('maestros').doc(id).get();
+
+      // Si el documento existe
+      if (docSnapshot.exists) {
+        return Maestro.fromMap(docSnapshot.data() as Map<String, dynamic>);
+      } else {
+        return null; // Si no existe, retorna null
+      }
+    } catch (e) {
+      print("Error al buscar el maestro por ID: $e");
+      return null;
+    }
+  }
+
+
   Future<Alumno?> buscarAlumno(String usuario, String contrasena) async {
     //BUSCAMOS EN LA "TABLA" alumnos Y POR UNA "CONSULTA" COMO EN SQL BUSCANDO EN LOS VALORES USUARIO Y CONTRASEÑA
     //SI LO ENCUENTRA LO OBTIENE Y SE ASIGNA A querySnapshot
@@ -55,7 +89,7 @@ class FirebaseController {
       List<Alumno> alumnos = querySnapshot.docs.map((doc) {
         return Alumno.fromMap(doc.data() as Map<String, dynamic>);
       }).toList();
-      return alumnos;
+    return alumnos;
     } catch (e) {
       print("Error al obtener alumnos: $e");
       return [];

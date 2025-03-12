@@ -1,3 +1,5 @@
+import 'package:avance1/controlador/FireBase_Controller.dart';
+import 'package:avance1/modelo/Grado.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:avance1/vista/pantalla_login.dart';
@@ -13,6 +15,7 @@ class CrearMaestroScreen extends StatefulWidget {
 }
 
 class _CrearMaestroScreenState extends State<CrearMaestroScreen> {
+  FirebaseController baseDatos = FirebaseController();
   final _formKey = GlobalKey<FormState>();
   final _idController = TextEditingController(); // Campo para el ID
   final _nombreController = TextEditingController();
@@ -21,11 +24,18 @@ class _CrearMaestroScreenState extends State<CrearMaestroScreen> {
   final _telefonoController = TextEditingController();
   final _usuarioController = TextEditingController();
   final _contrasenaController = TextEditingController();
-  final _rolController = TextEditingController(); // Controlador para el rol
-  String? _gradoSeleccionado;
-  String? _tipoMaestroSeleccionado;
-  final List<String> _grados = ["Grado 1", "Grado 2", "Grado 3", "Grado 4"];
-  final List<String> _tiposMaestro = ["Maestro guía", "Maestro general"];
+  Grado? _gradoSeleccionado;
+  bool _isMaestroGuia = false; // Valor para el checkbox
+  final List<Grado> _grados = [
+    Grado(id: "01", nombre: "1A"),
+    Grado(id: "02", nombre: "2A"),
+    Grado(id: "03", nombre: "3A"),
+    Grado(id: "04", nombre: "4A"),
+    Grado(id: "05", nombre: "5A"),
+    Grado(id: "06", nombre: "6A"),
+    Grado(id: "07", nombre: "7A"),
+    Grado(id: "08", nombre: "8A"),
+  ];
 
   @override
   void initState() {
@@ -34,13 +44,17 @@ class _CrearMaestroScreenState extends State<CrearMaestroScreen> {
       _idController.text = widget.maestro!.id; // Asignar el ID si existe
       _nombreController.text = widget.maestro!.nombre;
       _apellidoController.text = widget.maestro!.apellido;
-      _gradoSeleccionado = widget.maestro!.gradoAsignado;
-      _tipoMaestroSeleccionado = widget.maestro!.tipoMaestro;
+      _gradoSeleccionado =
+          widget.maestro!.gradosAsignados.isNotEmpty
+              ? widget.maestro!.gradosAsignados[0]
+              : null;
+      _isMaestroGuia =
+          widget.maestro!.tipoMaestro ==
+          "Maestro guía"; // Asignar si es maestro guía
       _emailController.text = widget.maestro!.email;
       _telefonoController.text = widget.maestro!.telefono;
       _usuarioController.text = widget.maestro!.usuario;
       _contrasenaController.text = widget.maestro!.contrasena;
-      _rolController.text = widget.maestro!.rol; // Asignar el rol si existe
     }
   }
 
@@ -73,40 +87,29 @@ class _CrearMaestroScreenState extends State<CrearMaestroScreen> {
           key: _formKey,
           child: ListView(
             children: [
-              _buildTextField(
-                "ID (DNI)",
-                _idController,
-                isNumber: true,
-              ), // Campo numérico
+              _buildTextField("ID (DNI)", _idController, isNumber: true),
               const SizedBox(height: 16),
               _buildTextField("Nombre completo", _nombreController),
               const SizedBox(height: 16),
               _buildTextField("Apellido", _apellidoController),
               const SizedBox(height: 16),
-              _buildDropdown("Grado", _grados, _gradoSeleccionado, (value) {
+              _buildDropdown("Grado", _grados, _gradoSeleccionado?.nombre, (
+                value,
+              ) {
                 setState(() {
                   _gradoSeleccionado = value;
                 });
               }),
               const SizedBox(height: 16),
-              _buildDropdown(
-                "Tipo de maestro",
-                _tiposMaestro,
-                _tipoMaestroSeleccionado,
-                (value) {
-                  setState(() {
-                    _tipoMaestroSeleccionado = value;
-                  });
-                },
-              ),
+              _buildCheckbox("¿Es maestro guía?", _isMaestroGuia, (value) {
+                setState(() {
+                  _isMaestroGuia = value!;
+                });
+              }),
               const SizedBox(height: 16),
               _buildTextField("Correo electrónico", _emailController),
               const SizedBox(height: 16),
-              _buildTextField(
-                "Teléfono",
-                _telefonoController,
-                isNumber: true,
-              ), // Campo numérico
+              _buildTextField("Teléfono", _telefonoController, isNumber: true),
               const SizedBox(height: 16),
               _buildTextField("Usuario", _usuarioController),
               const SizedBox(height: 16),
@@ -115,8 +118,6 @@ class _CrearMaestroScreenState extends State<CrearMaestroScreen> {
                 _contrasenaController,
                 obscureText: true,
               ),
-              const SizedBox(height: 16),
-              _buildTextField("Rol", _rolController), // Campo para el rol
               const SizedBox(height: 24),
               ElevatedButton(
                 onPressed: _submitForm,
@@ -153,10 +154,7 @@ class _CrearMaestroScreenState extends State<CrearMaestroScreen> {
     return TextFormField(
       controller: controller,
       obscureText: obscureText,
-      keyboardType:
-          isNumber
-              ? TextInputType.number
-              : TextInputType.text, // Teclado numérico o texto
+      keyboardType: isNumber ? TextInputType.number : TextInputType.text,
       decoration: InputDecoration(
         labelText: label,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
@@ -175,21 +173,33 @@ class _CrearMaestroScreenState extends State<CrearMaestroScreen> {
 
   Widget _buildDropdown(
     String label,
-    List<String> items,
+    List<Grado> items,
     String? value,
-    Function(String?) onChanged,
+    Function(Grado?) onChanged,
   ) {
-    return DropdownButtonFormField<String>(
-      value: value,
+    return DropdownButtonFormField<Grado>(
+      value: _gradoSeleccionado,
       decoration: InputDecoration(
         labelText: label,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
       ),
       items:
-          items.map((item) {
-            return DropdownMenuItem(value: item, child: Text(item));
+          items.map((Grado grado) {
+            return DropdownMenuItem<Grado>(
+              value: grado,
+              child: Text(grado.nombre),
+            );
           }).toList(),
-      onChanged: onChanged,
+      onChanged: (Grado? newValue) {
+        onChanged(newValue);
+      },
+    );
+  }
+
+  // Método para agregar el checkbox
+  Widget _buildCheckbox(String label, bool value, Function(bool?) onChanged) {
+    return Row(
+      children: [Checkbox(value: value, onChanged: onChanged), Text(label)],
     );
   }
 
@@ -197,18 +207,28 @@ class _CrearMaestroScreenState extends State<CrearMaestroScreen> {
     if (_formKey.currentState!.validate()) {
       // Crear o actualizar el maestro
       final maestro = Maestro(
-        id: _idController.text, // Asignar el ID
+        id: _idController.text,
         nombre: _nombreController.text,
         apellido: _apellidoController.text,
-        gradoAsignado: _gradoSeleccionado!,
-        tipoMaestro: _tipoMaestroSeleccionado!,
+        gradosAsignados:
+            _gradoSeleccionado != null ? [_gradoSeleccionado!] : [],
+        tipoMaestro: _isMaestroGuia ? "Maestro guía" : "Maestro general",
         email: _emailController.text,
         telefono: _telefonoController.text,
         usuario: _usuarioController.text,
         contrasena: _contrasenaController.text,
-        //rol: _rolController.text, // Asignar el rol
-        materias: [], // Aquí puedes agregar las materias asignadas
+        materias: [],
       );
+      
+      baseDatos.agregarMaestro(maestro);
+
+      _idController.clear();
+      _nombreController.clear();
+      _apellidoController.clear();
+      _emailController.clear();
+      _telefonoController.clear();
+      _usuarioController.clear();
+      _contrasenaController.clear();
 
       // Lógica para guardar o actualizar el maestro
       print(

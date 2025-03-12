@@ -42,14 +42,11 @@ class PantallaCarga extends StatefulWidget {
 }
 
 class _PantallaCargaState extends State<PantallaCarga> {
+  FirebaseController baseDatos = FirebaseController();
   @override
   void initState() {
     super.initState();
     print("Pantalla de carga iniciada");
-
-    Maestro ever = Maestro(id: "HSYQX", nombre: "Ever", apellido: "Torres", gradoAsignado: "Décimo", tipoMaestro: "Matemáticas", email: "Ever@gmail.com", telefono: "1234556", usuario: "Ever.M", contrasena: "ever123", materias: []);
-    FirebaseController firebase = FirebaseController();
-    firebase.agregarMaestro(ever);
     _verificarSesion();
   }
 
@@ -63,15 +60,17 @@ class _PantallaCargaState extends State<PantallaCarga> {
 
     bool sesionIniciada = prefs.getBool('sesionIniciada') ?? false;
     String rolUsuario = prefs.getString('rolUsuario') ?? 'oficial';
+    String id = prefs.getString('idUsuario') ?? "0";
 
     print("Sesión iniciada: $sesionIniciada");
     print("Rol del usuario: $rolUsuario");
+    print("Id del usuario: $id");
 
     // Simula la carga durante 3 segundos
     await Future.delayed(const Duration(seconds: 3));
 
     // Redirigir según el rol del usuario
-    Widget pantalla;
+    Widget pantalla = PantallaLogin();
 
     if (!sesionIniciada) {
       print("Redirigiendo a PantallaLogin");
@@ -83,25 +82,14 @@ class _PantallaCargaState extends State<PantallaCarga> {
           pantalla = const HomeAdmin();
           break;
         case "maestro":
+          Maestro? maestro = await baseDatos.buscarMaestroPorId(id);
           print("Redirigiendo a HomeMaestro");
-          pantalla = HomeMaestro(
-            maestro: Maestro(
-              id: "1",
-              nombre: "Nombre del Maestro",
-              apellido: "Apellido del Maestro",
-              gradoAsignado: "Grado 1",
-              tipoMaestro: "Maestro guía",
-              email: "maestro@example.com",
-              telefono: "123456789",
-              usuario: "maestro123",
-              contrasena: "password",
-              materias: [],
-            ),
-          );
+          if (maestro != null) pantalla = HomeMaestro(maestro: maestro);
           break;
-        case "estudiante":
+        case "alumno":
+          Alumno? alumno = await baseDatos.buscarAlumnoPorId(id);
           print("Redirigiendo a HomeEstudiante");
-          pantalla = const HomeEstudiante();
+          if (alumno != null) pantalla = HomeEstudiante(alumno: alumno);
           break;
         default:
           print("Rol no reconocido. Redirigiendo a PantallaLogin");

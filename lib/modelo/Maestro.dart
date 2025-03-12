@@ -1,21 +1,24 @@
+import 'package:avance1/modelo/Grado.dart';
+import 'package:avance1/modelo/Materia.dart';
+
 class Maestro {
-  final String id; // Identificador único DNI
+  final String id;
   final String nombre;
   final String apellido;
-  final String gradoAsignado; // Grado asignado
+  final List<Grado> gradosAsignados; // Lista de objetos Grado
   final String tipoMaestro;
   final String email;
   final String telefono;
   final String usuario;
   final String contrasena;
-  final List<String> materias; // Lista de IDs de materias
+  final List<Materia> materias; // Lista de objetos Materia
   final String rol = "maestro";
 
   Maestro({
     required this.id,
     required this.nombre,
     required this.apellido,
-    required this.gradoAsignado,
+    required this.gradosAsignados,
     required this.tipoMaestro,
     required this.email,
     required this.telefono,
@@ -30,14 +33,14 @@ class Maestro {
       "id": id,
       "nombre": nombre,
       "apellido": apellido,
-      "gradoAsignado": gradoAsignado,
+      "gradosAsignados": gradosAsignados.map((g) => g.toMap()).toList(), // Convertir lista de Grado a lista de Map
       "tipoMaestro": tipoMaestro,
       "email": email,
       "telefono": telefono,
       "usuario": usuario,
       "contrasena": contrasena,
       "rol": rol,
-      "materias": materias,
+      "materias": materias.map((m) => m.toMap()).toList(), // Convertir lista de Materia a lista de Map
     };
   }
 
@@ -47,13 +50,13 @@ class Maestro {
       id: data["id"],
       nombre: data["nombre"],
       apellido: data["apellido"],
-      gradoAsignado: data["gradoAsignado"],
+      gradosAsignados: (data["gradosAsignados"] as List).map((g) => Grado.fromMap(g)).toList(), // Convertir lista de Map a lista de objetos Grado
       tipoMaestro: data["tipoMaestro"],
       email: data["email"],
       telefono: data["telefono"],
       usuario: data["usuario"],
       contrasena: data["contrasena"],
-      materias: List<String>.from(data["materias"]),
+      materias: (data["materias"] as List).map((m) => Materia.fromMap(m)).toList(), // Convertir lista de Map a lista de objetos Materia
     );
   }
 }

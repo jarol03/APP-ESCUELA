@@ -1,3 +1,4 @@
+import 'package:avance1/controlador/FireBase_Controller.dart';
 import 'package:flutter/material.dart';
 import 'package:avance1/modelo/Materia.dart';
 import 'package:avance1/modelo/Maestro.dart';
@@ -12,6 +13,8 @@ class ClasesEstudianteScreen extends StatefulWidget {
 }
 
 class _ClasesEstudianteScreenState extends State<ClasesEstudianteScreen> {
+  FirebaseController baseDatos = FirebaseController();
+  List<Maestro> maestros = [];
   final List<Materia> _clases = [
     Materia(
       id: "1",
@@ -22,21 +25,16 @@ class _ClasesEstudianteScreenState extends State<ClasesEstudianteScreen> {
     // Agregar más clases aquí
   ];
 
-  final List<Maestro> _maestros = [
-    Maestro(
-      id: "1",
-      nombre: "Carlos Sánchez",
-      apellido: "Gómez",
-      gradoAsignado: "Grado 1",
-      tipoMaestro: "Maestro guía",
-      email: "carlos@example.com",
-      telefono: "123456789",
-      usuario: "carlos123",
-      contrasena: "password",
-      materias: ["1"],
-    ),
-    // Agregar más maestros aquí
-  ];
+  Future<void> obtenerMaestros() async {
+    maestros = await baseDatos.obtenerMaestros();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    obtenerMaestros();
+  }
+  
 
   String _searchQuery = "";
 
@@ -96,14 +94,14 @@ class _ClasesEstudianteScreenState extends State<ClasesEstudianteScreen> {
                 itemCount: _filteredClases.length,
                 itemBuilder: (context, index) {
                   final clase = _filteredClases[index];
-                  final maestro = _maestros.firstWhere(
+                  final maestro = maestros.firstWhere(
                     (m) => m.materias.contains(clase.id),
                     orElse:
                         () => Maestro(
                           id: "",
                           nombre: "Sin asignar",
                           apellido: "",
-                          gradoAsignado: "",
+                          gradosAsignados: [],
                           tipoMaestro: "",
                           email: "",
                           telefono: "",

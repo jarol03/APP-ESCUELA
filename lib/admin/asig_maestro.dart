@@ -1,3 +1,4 @@
+import 'package:avance1/controlador/FireBase_Controller.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:avance1/vista/pantalla_login.dart';
@@ -13,22 +14,19 @@ class AsigMaestroScreen extends StatefulWidget {
 }
 
 class _AsigMaestroScreenState extends State<AsigMaestroScreen> {
-  // Declaración de la lista de maestros
-  final List<Maestro> _maestros = [
-    Maestro(
-      id: "12345678",
-      nombre: "Carlos Sánchez",
-      apellido: "Gómez",
-      gradoAsignado: "Grado 1",
-      tipoMaestro: "Maestro guía",
-      email: "carlos@example.com",
-      telefono: "123456789",
-      usuario: "carlos123",
-      contrasena: "password",
-      materias: [],
-    ),
-    // Agregar más maestros aquí
-  ];
+  final FirebaseController baseDatos = FirebaseController();
+  List<Maestro> _maestros = [];
+
+  Future<void> obtenerMaestros()async {
+    _maestros = await baseDatos.obtenerMaestros();
+  }
+  
+  @override
+  void initState() {
+    super.initState();
+    obtenerMaestros();
+  }
+  
 
   // Declaración de la lista de materias
   final List<Materia> _materias = [
@@ -51,7 +49,7 @@ class _AsigMaestroScreenState extends State<AsigMaestroScreen> {
               maestro.nombre.toLowerCase().contains(
                 _searchQuery.toLowerCase(),
               ) ||
-              maestro.gradoAsignado.toLowerCase().contains(
+              maestro.gradosAsignados[0].nombre.toLowerCase().contains(
                 _searchQuery.toLowerCase(),
               ),
         )
@@ -75,7 +73,7 @@ class _AsigMaestroScreenState extends State<AsigMaestroScreen> {
                     onChanged: (value) {
                       setState(() {
                         if (value!) {
-                          maestro.materias.add(materia.id);
+                          maestro.materias.add(materia);
                         } else {
                           maestro.materias.remove(materia.id);
                         }
@@ -148,7 +146,7 @@ class _AsigMaestroScreenState extends State<AsigMaestroScreen> {
                     margin: const EdgeInsets.only(bottom: 16),
                     child: ListTile(
                       title: Text("${maestro.nombre} ${maestro.apellido}"),
-                      subtitle: Text("Grado: ${maestro.gradoAsignado}"),
+                      subtitle: Text("Grado: ${maestro.gradosAsignados}"),
                       trailing: IconButton(
                         icon: const Icon(Icons.add, color: Colors.blue),
                         onPressed: () {

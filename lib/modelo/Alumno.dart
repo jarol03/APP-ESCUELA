@@ -1,15 +1,18 @@
+import 'package:avance1/modelo/Grado.dart';
+import 'package:avance1/modelo/Materia.dart';
+
 class Alumno {
-  final String id; // Identificador único (DNI)
+  final String id;
   final String nombre;
   final String apellido;
-  final String grado; // Grado al que pertenece
+  final Grado grado; // Objeto Grado
   final String email;
   final String telefono;
   final String usuario;
   final String contrasena;
   final String nota;
   final bool active;
-  final List<String> materias; // Lista de IDs de materias
+  final List<Materia> materias; // Lista de objetos Materia
   final String rol = "alumno";
 
   Alumno({
@@ -23,7 +26,7 @@ class Alumno {
     required this.contrasena,
     required this.nota,
     required this.active,
-    required this.materias, // Ahora está definido como campo
+    required this.materias,
   });
 
   // Convertir a Map para Firestore
@@ -32,14 +35,14 @@ class Alumno {
       "id": id,
       "nombre": nombre,
       "apellido": apellido,
-      "grado": grado,
+      "grado": grado.toMap(), // Convertir Grado a Map
       "email": email,
       "telefono": telefono,
       "usuario": usuario,
       "contrasena": contrasena,
       "nota": nota,
       "active": active,
-      "materias": materias,
+      "materias": materias.map((m) => m?.toMap()).toList(), // Convertir lista de Materia a lista de Map
     };
   }
 
@@ -49,14 +52,14 @@ class Alumno {
       id: data["id"],
       nombre: data["nombre"],
       apellido: data["apellido"],
-      grado: data["grado"],
+      grado: Grado.fromMap(data["grado"]), // Convertir Map a objeto Grado
       email: data["email"],
       telefono: data["telefono"],
       usuario: data["usuario"],
       contrasena: data["contrasena"],
       nota: data["nota"],
       active: data["active"],
-      materias: List<String>.from(data["materias"]),
+      materias: (data["materias"] as List).map((m) => Materia.fromMap(m)).toList(), // Convertir lista de Map a lista de objetos Materia
     );
   }
 }

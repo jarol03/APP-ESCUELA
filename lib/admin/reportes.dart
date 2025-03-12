@@ -1,3 +1,5 @@
+import 'package:avance1/controlador/FireBase_Controller.dart';
+import 'package:avance1/modelo/Grado.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:avance1/modelo/Alumno.dart';
@@ -16,23 +18,26 @@ class ReportesScreen extends StatefulWidget {
 }
 
 class _ReportesScreenState extends State<ReportesScreen> {
+  final FirebaseController baseDatos = FirebaseController();
+  List<Alumno> alumnos = [];
+  List<Maestro> maestros = [];
   final TextEditingController _searchController = TextEditingController();
-  final List<Alumno> _estudiantes = [
-    Alumno(
-      id: "12345678",
-      nombre: "Juan Pérez",
-      apellido: "González",
-      grado: "Grado 1",
-      email: "juan@example.com",
-      telefono: "123456789",
-      usuario: "juan123",
-      contrasena: "password",
-      nota: "A",
-      active: true,
-      materias: ["1", "2"], // IDs de las materias asignadas
-    ),
-    // Agregar más estudiantes aquí
-  ];
+
+  Future<void> obtenerAlumnos() async {
+    alumnos = await baseDatos.obtenerAlumnos();
+  }
+
+  Future<void> obtenerMaestros() async {
+    maestros = await baseDatos.obtenerMaestros();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    obtenerAlumnos();
+    obtenerMaestros();
+  }
+  
 
   final List<Materia> _materias = [
     Materia(
@@ -44,21 +49,6 @@ class _ReportesScreenState extends State<ReportesScreen> {
     // Agregar más materias aquí
   ];
 
-  final List<Maestro> _maestros = [
-    Maestro(
-      id: "87654321",
-      nombre: "Carlos Sánchez",
-      apellido: "Gómez",
-      gradoAsignado: "Grado 1",
-      tipoMaestro: "Maestro guía",
-      email: "carlos@example.com",
-      telefono: "123456789",
-      usuario: "carlos123",
-      contrasena: "password",
-      materias: ["Matemáticas", "Ciencias"],
-    ),
-    // Agregar más maestros aquí
-  ];
 
   Alumno? _estudianteSeleccionado;
   Maestro? _maestroSeleccionado;
@@ -66,14 +56,14 @@ class _ReportesScreenState extends State<ReportesScreen> {
   void _buscarEstudiante() {
     final String id = _searchController.text.trim();
     setState(() {
-      _estudianteSeleccionado = _estudiantes.firstWhere(
+      _estudianteSeleccionado = alumnos.firstWhere(
         (estudiante) => estudiante.id == id,
         orElse:
             () => Alumno(
               id: "",
               nombre: "",
               apellido: "",
-              grado: "",
+              grado: Grado(id: "", nombre: ""),
               email: "",
               telefono: "",
               usuario: "",
@@ -181,9 +171,9 @@ class _ReportesScreenState extends State<ReportesScreen> {
               ),
               pw.Column(
                 children:
-                    _maestros.map((maestro) {
+                    maestros.map((maestro) {
                       return pw.Text(
-                        "- ${maestro.nombre} ${maestro.apellido} (${maestro.gradoAsignado})",
+                        "- ${maestro.nombre} ${maestro.apellido} (${maestro.gradosAsignados})",
                         style: pw.TextStyle(fontSize: 14),
                       );
                     }).toList(),

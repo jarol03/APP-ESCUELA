@@ -1,13 +1,15 @@
+import 'package:avance1/modelo/Alumno.dart';
+import 'package:avance1/perfil.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:avance1/vista/pantalla_login.dart';
 import 'package:avance1/estudiante/clases_estudiantes.dart';
 import 'package:avance1/estudiante/notas_estudiantes.dart';
 import 'package:avance1/anuncios.dart'; // Pantalla global de anuncios
-import 'package:avance1/perfil.dart'; // Pantalla global de perfil
 
 class HomeEstudiante extends StatefulWidget {
-  const HomeEstudiante({super.key});
+  final Alumno alumno;
+  const HomeEstudiante({super.key, required this.alumno});
 
   @override
   _HomeEstudianteState createState() => _HomeEstudianteState();
@@ -17,11 +19,18 @@ class _HomeEstudianteState extends State<HomeEstudiante> {
   int _selectedIndex = 0;
 
   // Lista de pantallas del estudiante
-  final List<Widget> _pages = [
-    const HomeEstudianteContent(), // Pantalla principal (Inicio)
-    const AnunciosScreen(), // Pantalla global de anuncios
-    const PerfilScreen(), // Pantalla global de perfil
-  ];
+  late final List<Widget>
+  _pages; // Usa late para inicializar después del constructor
+
+  @override
+  void initState() {
+    super.initState();
+    _pages = [
+      const HomeEstudianteContent(), // Pantalla principal (Inicio)
+      const AnunciosScreen(), // Pantalla global de anuncios
+      PerfilScreen(alumno: widget.alumno), // Pantalla global de perfil
+    ];
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -35,7 +44,7 @@ class _HomeEstudianteState extends State<HomeEstudiante> {
       appBar: AppBar(
         title: Text(
           _selectedIndex == 0
-              ? 'Bienvenido Héctor'
+              ? 'Bienvenido ${widget.alumno.nombre.split(" ")[0]}'
               : _selectedIndex == 1
               ? ''
               : '',

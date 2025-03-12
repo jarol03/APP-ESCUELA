@@ -57,7 +57,7 @@ class _AsigGradoScreenState extends State<AsigGradoScreen> {
                     onChanged: (value) {
                       setState(() {
                         if (value!) {
-                          grado.materias.add(materia.id); // Usamos 'materias'
+                          grado.materias.add(materia); // Usamos 'materias'
                         } else {
                           grado.materias.remove(
                             materia.id,
