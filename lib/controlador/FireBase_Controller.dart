@@ -1,3 +1,4 @@
+import 'package:avance1/modelo/Grado.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../modelo/Alumno.dart';
 import '../modelo/Maestro.dart';
@@ -16,7 +17,8 @@ class FirebaseController {
   // Método para buscar un Alumno por id
   Future<Alumno?> buscarAlumnoPorId(String id) async {
     try {
-      DocumentSnapshot docSnapshot = await base.collection('alumnos').doc(id).get();
+      DocumentSnapshot docSnapshot =
+          await base.collection('alumnos').doc(id).get();
 
       // Si el documento existe
       if (docSnapshot.exists) {
@@ -32,7 +34,8 @@ class FirebaseController {
 
   Future<Maestro?> buscarMaestroPorId(String id) async {
     try {
-      DocumentSnapshot docSnapshot = await base.collection('maestros').doc(id).get();
+      DocumentSnapshot docSnapshot =
+          await base.collection('maestros').doc(id).get();
 
       // Si el documento existe
       if (docSnapshot.exists) {
@@ -46,50 +49,59 @@ class FirebaseController {
     }
   }
 
-
   Future<Alumno?> buscarAlumno(String usuario, String contrasena) async {
     //BUSCAMOS EN LA "TABLA" alumnos Y POR UNA "CONSULTA" COMO EN SQL BUSCANDO EN LOS VALORES USUARIO Y CONTRASEÑA
     //SI LO ENCUENTRA LO OBTIENE Y SE ASIGNA A querySnapshot
-    QuerySnapshot querySnapshot = await base.collection('alumnos')
-      .where('usuario', isEqualTo: usuario) // Filtramos por el usuario
-      .where('contrasena', isEqualTo: contrasena) // Filtramos por la contraseña
-      .get();
+    QuerySnapshot querySnapshot =
+        await base
+            .collection('alumnos')
+            .where('usuario', isEqualTo: usuario) // Filtramos por el usuario
+            .where(
+              'contrasena',
+              isEqualTo: contrasena,
+            ) // Filtramos por la contraseña
+            .get();
 
-      //SI NO ESTÁ VACÍO O SEA QUE SI ENCONTRÓ ALGO, GUARDAMOS LA "TABLA" EN ESTE CASO DOCUMENTO PARA FIRESTORE
-      //Y OBTENEMOS EL PRIMER RESULTADO, CREAMOS UN ALUMNO MEDIANTE UN CONSTRUCTOR ESPECIAL
-      //QUE RECIBE UN Map<String, dynamic> PORQUE CONVERTIMOS LA DATA DEL DOCUMENTO A UN Map<String, dynamic>
-      //Y RETORNAMOS ESE ALUMNO, SI NO RETORNARÁ NULL
-      if (querySnapshot.docs.isNotEmpty) {
-        var alumnoDoc = querySnapshot.docs.first;
-        Alumno alumno = Alumno.fromMap(alumnoDoc.data() as Map<String, dynamic>);
-        return alumno;
-      }
-
-      return null;
+    //SI NO ESTÁ VACÍO O SEA QUE SI ENCONTRÓ ALGO, GUARDAMOS LA "TABLA" EN ESTE CASO DOCUMENTO PARA FIRESTORE
+    //Y OBTENEMOS EL PRIMER RESULTADO, CREAMOS UN ALUMNO MEDIANTE UN CONSTRUCTOR ESPECIAL
+    //QUE RECIBE UN Map<String, dynamic> PORQUE CONVERTIMOS LA DATA DEL DOCUMENTO A UN Map<String, dynamic>
+    //Y RETORNAMOS ESE ALUMNO, SI NO RETORNARÁ NULL
+    if (querySnapshot.docs.isNotEmpty) {
+      var alumnoDoc = querySnapshot.docs.first;
+      Alumno alumno = Alumno.fromMap(alumnoDoc.data() as Map<String, dynamic>);
+      return alumno;
     }
 
-    Future<Maestro?> buscarMaestro(String usuario, String contrasena) async {
-    QuerySnapshot querySnapshot = await base.collection('maestros')
-      .where('usuario', isEqualTo: usuario)
-      .where('contrasena', isEqualTo: contrasena)
-      .get();
+    return null;
+  }
 
-      if (querySnapshot.docs.isNotEmpty) {
-        var maestroDoc = querySnapshot.docs.first;
-        Maestro maestro = Maestro.fromMap(maestroDoc.data() as Map<String, dynamic>);
-        return maestro;
-      }
+  Future<Maestro?> buscarMaestro(String usuario, String contrasena) async {
+    QuerySnapshot querySnapshot =
+        await base
+            .collection('maestros')
+            .where('usuario', isEqualTo: usuario)
+            .where('contrasena', isEqualTo: contrasena)
+            .get();
 
-      return null;
+    if (querySnapshot.docs.isNotEmpty) {
+      var maestroDoc = querySnapshot.docs.first;
+      Maestro maestro = Maestro.fromMap(
+        maestroDoc.data() as Map<String, dynamic>,
+      );
+      return maestro;
     }
+
+    return null;
+  }
 
   Future<List<Alumno>> obtenerAlumnos() async {
     try {
       QuerySnapshot querySnapshot = await base.collection('alumnos').get();
-      List<Alumno> alumnos = querySnapshot.docs.map((doc) {
-        return Alumno.fromMap(doc.data() as Map<String, dynamic>);
-      }).toList();
-    return alumnos;
+      List<Alumno> alumnos =
+          querySnapshot.docs.map((doc) {
+            return Alumno.fromMap(doc.data() as Map<String, dynamic>);
+          }).toList();
+      return alumnos;
     } catch (e) {
       print("Error al obtener alumnos: $e");
       return [];
@@ -99,9 +111,10 @@ class FirebaseController {
   Future<List<Maestro>> obtenerMaestros() async {
     try {
       QuerySnapshot querySnapshot = await base.collection('maestros').get();
-      List<Maestro> maestros = querySnapshot.docs.map((doc) {
-        return Maestro.fromMap(doc.data() as Map<String, dynamic>);
-      }).toList();
+      List<Maestro> maestros =
+          querySnapshot.docs.map((doc) {
+            return Maestro.fromMap(doc.data() as Map<String, dynamic>);
+          }).toList();
       return maestros;
     } catch (e) {
       print("Error al obtener maestros: $e");
@@ -115,5 +128,32 @@ class FirebaseController {
 
   Future<void> eliminarMaestro(String id) async {
     await base.collection("maestros").doc(id).delete();
+  }
+
+  /**
+   * ===================================
+   * LOGICA PARA LOS GRADOS
+   * ===================================
+   */
+  Future<void> agregarGrado(Grado grado) async {
+    await base.collection('grados').doc(grado.id).set(grado.toMap());
+  }
+
+  Future<void> eliminarGrado(String id) async {
+    await base.collection("grados").doc(id).delete();
+  }
+
+  Future<List<Grado>> obtenerGrados() async {
+    try {
+      QuerySnapshot querySnapshot = await base.collection('grados').get();
+      List<Grado> grados =
+          querySnapshot.docs.map((doc) {
+            return Grado.fromMap(doc.data() as Map<String, dynamic>);
+          }).toList();
+      return grados;
+    } catch (e) {
+      print("Error al obtener maestros: $e");
+      return [];
+    }
   }
 }

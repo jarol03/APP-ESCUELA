@@ -1,6 +1,7 @@
 import 'package:avance1/controlador/FireBase_Controller.dart';
 import 'package:avance1/firebase_options.dart';
 import 'package:avance1/modelo/Alumno.dart';
+import 'package:avance1/modelo/Grado.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -47,6 +48,14 @@ class _PantallaCargaState extends State<PantallaCarga> {
   void initState() {
     super.initState();
     print("Pantalla de carga iniciada");
+    Grado primero = Grado(id: "1A", nombre: "Primero A");
+    Grado segundo = Grado(id: "2A", nombre: "Segundo A");
+    Grado tercero = Grado(id: "3A", nombre: "Tercero A");
+    Grado cuarto = Grado(id: "4A", nombre: "Cuarto A");
+    baseDatos.agregarGrado(primero);
+    baseDatos.agregarGrado(segundo);
+    baseDatos.agregarGrado(tercero);
+    baseDatos.agregarGrado(cuarto);
     _verificarSesion();
   }
 

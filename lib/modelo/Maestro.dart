@@ -5,13 +5,13 @@ class Maestro {
   final String id;
   final String nombre;
   final String apellido;
-  final List<Grado> gradosAsignados; // Lista de objetos Grado
+  List<Grado> gradosAsignados; // Lista de objetos Grado
   final String tipoMaestro;
   final String email;
   final String telefono;
   final String usuario;
   final String contrasena;
-  final List<Materia> materias; // Lista de objetos Materia
+  List<Materia> materias; // Lista de objetos Materia
   final String rol = "maestro";
 
   Maestro({

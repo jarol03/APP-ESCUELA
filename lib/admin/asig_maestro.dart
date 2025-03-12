@@ -16,17 +16,20 @@ class AsigMaestroScreen extends StatefulWidget {
 class _AsigMaestroScreenState extends State<AsigMaestroScreen> {
   final FirebaseController baseDatos = FirebaseController();
   List<Maestro> _maestros = [];
+  bool option1 = false;
+  bool option2 = false;
+  bool option3 = false;
 
-  Future<void> obtenerMaestros()async {
-    _maestros = await baseDatos.obtenerMaestros();
-  }
-  
   @override
   void initState() {
     super.initState();
     obtenerMaestros();
   }
-  
+
+  Future<void> obtenerMaestros() async {
+    _maestros = await baseDatos.obtenerMaestros();
+    setState(() {});
+  }
 
   // Declaración de la lista de materias
   final List<Materia> _materias = [
@@ -58,38 +61,61 @@ class _AsigMaestroScreenState extends State<AsigMaestroScreen> {
 
   // Método para asignar materias a un maestro
   void _asignarMaterias(Maestro maestro) {
+    List<String> materiasSeleccionadas =
+        maestro.materias.map((materia) => materia.id).toList();
+
     showDialog(
       context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text("Asignar materias"),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children:
-                _materias.map((materia) {
-                  return CheckboxListTile(
-                    title: Text(materia.nombre),
-                    value: maestro.materias.contains(materia.id),
-                    onChanged: (value) {
-                      setState(() {
-                        if (value!) {
-                          maestro.materias.add(materia);
-                        } else {
-                          maestro.materias.remove(materia.id);
-                        }
-                      });
-                    },
-                  );
-                }).toList(),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text("Guardar"),
-            ),
-          ],
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setStateDialog) {
+            return AlertDialog(
+              title: Text("Asignar materias a ${maestro.nombre}"),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children:
+                    _materias.map((materia) {
+                      return CheckboxListTile(
+                        title: Text(materia.nombre),
+                        subtitle: Text(materia.descripcion),
+                        value: materiasSeleccionadas.contains(materia.id),
+                        onChanged: (bool? value) {
+                          setStateDialog(() {
+                            if (value == true) {
+                              materiasSeleccionadas.add(materia.id);
+                            } else {
+                              materiasSeleccionadas.remove(materia.id);
+                            }
+                          });
+                        },
+                      );
+                    }).toList(),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    // Actualizar la lista de materias asignadas al maestro
+                    maestro.materias =
+                        _materias
+                            .where(
+                              (materia) =>
+                                  materiasSeleccionadas.contains(materia.id),
+                            )
+                            .toList();
+                    Navigator.of(context).pop();
+                    setState(() {}); // Actualizar la UI
+                  },
+                  child: Text("Guardar"),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text("Cancelar"),
+                ),
+              ],
+            );
+          },
         );
       },
     );
