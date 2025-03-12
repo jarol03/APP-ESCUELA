@@ -12,12 +12,24 @@ class VeriMaestroScreen extends StatefulWidget {
 class _VeriMaestroScreenState extends State<VeriMaestroScreen> {
   FirebaseController baseDatos = FirebaseController();
   List<Maestro> maestros = [];
+  String _searchQuery = "";
+
+  @override
+  void initState() {
+    super.initState();
+    obtenerMaestros();
+  }
 
   Future<void> obtenerMaestros() async {
     maestros = await baseDatos.obtenerMaestros();
+    setState(() {});
   }
 
-  String _searchQuery = "";
+  Future<void> eliminarMaestro(String id) async {
+    baseDatos.eliminarMaestro(id);
+    maestros.removeWhere((maestro) => maestro.id == id);
+    setState(() {});
+  }
 
   List<Maestro> get _filteredMaestros {
     return maestros
@@ -79,7 +91,7 @@ class _VeriMaestroScreenState extends State<VeriMaestroScreen> {
                           IconButton(
                             icon: const Icon(Icons.delete, color: Colors.red),
                             onPressed: () {
-                              // Lógica para eliminar maestro
+                              eliminarMaestro(maestro.id);
                             },
                           ),
                         ],

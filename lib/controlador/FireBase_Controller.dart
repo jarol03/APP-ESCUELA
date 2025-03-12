@@ -108,4 +108,12 @@ class FirebaseController {
       return [];
     }
   }
+
+  Future<void> eliminarAlumno(String id) async {
+    await base.collection("alumnos").doc(id).delete();
+  }
+
+  Future<void> eliminarMaestro(String id) async {
+    await base.collection("maestros").doc(id).delete();
+  }
 }

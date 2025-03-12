@@ -11,7 +11,7 @@ class VeriEstudianteScreen extends StatefulWidget {
 
 class _VeriEstudianteScreenState extends State<VeriEstudianteScreen> {
   final FirebaseController baseDatos = FirebaseController();
-  List<Alumno> _estudiantes = [];
+  List<Alumno> alumnos = [];
   String _searchQuery = "";
 
   @override
@@ -22,14 +22,18 @@ class _VeriEstudianteScreenState extends State<VeriEstudianteScreen> {
 
   // Función asincrónica para obtener los alumnos
   Future<void> _obtenerAlumnos() async {
-    List<Alumno> alumnos = await baseDatos.obtenerAlumnos();
-    setState(() {
-      _estudiantes = alumnos; // Actualizamos el estado con los alumnos obtenidos
-    });
+    alumnos = await baseDatos.obtenerAlumnos();
+    setState(() {});
+  }
+
+  Future<void> eliminarAlumno(String id) async {
+    baseDatos.eliminarAlumno(id);
+    alumnos.removeWhere((alumno) => alumno.id == id);
+    setState(() {});
   }
 
   List<Alumno> get _filteredEstudiantes {
-    return _estudiantes
+    return alumnos
         .where(
           (estudiante) =>
               estudiante.nombre.toLowerCase().contains(
@@ -67,19 +71,19 @@ class _VeriEstudianteScreenState extends State<VeriEstudianteScreen> {
             const SizedBox(height: 16),
             // Lista de estudiantes
             Expanded(
-              child: _estudiantes.isEmpty // Verificamos si la lista está vacía
+              child: alumnos.isEmpty // Verificamos si la lista está vacía
                   ? Center(child: CircularProgressIndicator()) // Mostramos un indicador de carga
                   : ListView.builder(
                       itemCount: _filteredEstudiantes.length,
                       itemBuilder: (context, index) {
-                        final estudiante = _filteredEstudiantes[index];
+                        final alumno = _filteredEstudiantes[index];
                         return Card(
                           margin: const EdgeInsets.only(bottom: 16),
                           child: ListTile(
                             title: Text(
-                              "${estudiante.nombre} ${estudiante.apellido}",
+                              "${alumno.nombre} ${alumno.apellido}",
                             ),
-                            subtitle: Text("Grado: ${estudiante.grado}"),
+                            subtitle: Text("Grado: ${alumno.grado}"),
                             trailing: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
@@ -92,7 +96,7 @@ class _VeriEstudianteScreenState extends State<VeriEstudianteScreen> {
                                 IconButton(
                                   icon: const Icon(Icons.delete, color: Colors.red),
                                   onPressed: () {
-                                    // Lógica para eliminar estudiante
+                                    eliminarAlumno(alumno.id);
                                   },
                                 ),
                               ],

@@ -91,7 +91,7 @@ class HomeMaestroContent extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Bienvenido, ${maestro.nombre}",
+                    "Bienvenido, ${maestro.nombre.split(" ")[0]} ${maestro.nombre.split(" ")[2]}",
                     style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,

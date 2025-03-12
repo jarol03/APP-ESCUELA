@@ -42,14 +42,7 @@ class _HomeEstudianteState extends State<HomeEstudiante> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          _selectedIndex == 0
-              ? 'Bienvenido ${widget.alumno.nombre.split(" ")[0]}'
-              : _selectedIndex == 1
-              ? ''
-              : '',
-        ),
-        backgroundColor: const Color.fromARGB(255, 100, 200, 236),
+        title: Text('Bienvenido ${widget.alumno.nombre.split(" ")[0]}'),
         actions: [
           IconButton(
             icon: const Icon(Icons.logout, size: 30),

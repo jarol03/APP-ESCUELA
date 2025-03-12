@@ -1,3 +1,6 @@
+import 'package:avance1/controlador/FireBase_Controller.dart';
+import 'package:avance1/modelo/Alumno.dart';
+import 'package:avance1/modelo/Maestro.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:avance1/vista/pantalla_login.dart';
@@ -15,14 +18,30 @@ class HomeAdmin extends StatefulWidget {
 }
 
 class _HomeAdminState extends State<HomeAdmin> {
+  FirebaseController baseDatos = FirebaseController();
+  List<Alumno> alumnos = [];
+  List<Maestro> maestros = [];
+  final List<Widget> _pages = [];
   int _selectedIndex = 0;
 
-  // Lista de pantallas del admin
-  final List<Widget> _pages = [
-    const HomeAdminContent(), // Pantalla principal
-    const AnunciosScreen(), // Pantalla de anuncios
-    const PerfilScreen(), // Pantalla de perfil
-  ];
+  @override
+void initState() {
+  super.initState();
+  obtenerListas();
+}
+
+void obtenerListas() async {
+  alumnos = await baseDatos.obtenerAlumnos();
+  maestros = await baseDatos.obtenerMaestros();
+
+  setState(() {
+    _pages.addAll([
+      HomeAdminContent(alumnos: alumnos, maestros: maestros), // Ahora sí pasa los datos correctos
+      const AnunciosScreen(),
+      const PerfilScreen(),
+    ]);
+  });
+}
 
   void _onItemTapped(int index) {
     setState(() {
@@ -70,7 +89,9 @@ class _HomeAdminState extends State<HomeAdmin> {
 }
 
 class HomeAdminContent extends StatelessWidget {
-  const HomeAdminContent({super.key});
+  final List<Alumno> alumnos;
+  final List<Maestro> maestros;
+  const HomeAdminContent({super.key, required this.alumnos, required this.maestros});
 
   @override
   Widget build(BuildContext context) {
@@ -118,8 +139,8 @@ class HomeAdminContent extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _buildInfoItem("Estudiantes", "25"),
-                _buildInfoItem("Maestros", "70"),
+                _buildInfoItem("Estudiantes", alumnos.length.toString()),
+                _buildInfoItem("Maestros", maestros.length.toString()),
               ],
             ),
           ),
