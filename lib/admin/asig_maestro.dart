@@ -16,9 +16,6 @@ class AsigMaestroScreen extends StatefulWidget {
 class _AsigMaestroScreenState extends State<AsigMaestroScreen> {
   final FirebaseController baseDatos = FirebaseController();
   List<Maestro> _maestros = [];
-  bool option1 = false;
-  bool option2 = false;
-  bool option3 = false;
 
   @override
   void initState() {
