@@ -1,3 +1,4 @@
+import 'package:avance1/modelo/Anuncio.dart';
 import 'package:avance1/modelo/Grado.dart';
 import 'package:avance1/modelo/Materia.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -153,7 +154,7 @@ class FirebaseController {
           }).toList();
       return grados;
     } catch (e) {
-      print("Error al obtener maestros: $e");
+      print("Error al obtener grados: $e");
       return [];
     }
   }
@@ -174,6 +175,29 @@ class FirebaseController {
       await gradoRef.update({
         'materias': grado.materias.map((materia) => materia.toMap()).toList(),
       });
+    }
+  }
+
+  /**
+   * ===================================
+   * LOGICA PARA LOS ANUNCIOS
+   * ===================================
+   */
+  Future<void> agregarAnuncio(Anuncio anuncio) async {
+    await base.collection('anuncios').doc(anuncio.id).set(anuncio.toMap());
+  }
+
+  Future<List<Anuncio>> obtenerAnuncios() async {
+    try {
+      QuerySnapshot querySnapshot = await base.collection('anuncios').get();
+      List<Anuncio> anuncios =
+          querySnapshot.docs.map((doc) {
+            return Anuncio.fromMap(doc.data() as Map<String, dynamic>);
+          }).toList();
+      return anuncios;
+    } catch (e) {
+      print("Error al obtener anuncios: $e");
+      return [];
     }
   }
 }

@@ -1,3 +1,4 @@
+import 'package:avance1/controlador/FireBase_Controller.dart';
 import 'package:flutter/material.dart';
 import 'package:avance1/crear_anuncios.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,29 +13,20 @@ class AnunciosScreen extends StatefulWidget {
 }
 
 class _AnunciosScreenState extends State<AnunciosScreen> {
-  final List<Anuncio> _anuncios = [
-    Anuncio(
-      id: "1",
-      titulo: "Bienvenida al nuevo ciclo escolar",
-      contenido: "Les damos la bienvenida al ciclo escolar 2023-2024.",
-      autor: "Admin",
-      fecha: DateTime.now(),
-    ),
-    Anuncio(
-      id: "2",
-      titulo: "Reunión de padres",
-      contenido: "La reunión de padres se llevará a cabo el próximo lunes.",
-      autor: "Maestro Juan",
-      fecha: DateTime.now(),
-    ),
-  ];
+  FirebaseController baseDatos = FirebaseController();
+  List<Anuncio> _anuncios = [];
 
   String? _rolUsuario;
 
   @override
   void initState() {
     super.initState();
+    obtenerAnuncios();
     _obtenerRolUsuario();
+  }
+
+  Future<void> obtenerAnuncios() async {
+    _anuncios = await baseDatos.obtenerAnuncios();
   }
 
   void _obtenerRolUsuario() async {

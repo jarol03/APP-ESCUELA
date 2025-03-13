@@ -65,6 +65,9 @@ class _PantallaLoginState extends State<PantallaLogin> {
         ), // Redirige al HomeMaestro
       );
     } else if (usuario == "admin" && contrasena == "admin123") {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('sesionIniciada', true);
+      await prefs.setString('rolUsuario', "admin");
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => HomeAdmin()),

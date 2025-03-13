@@ -1,3 +1,4 @@
+import 'package:avance1/controlador/FireBase_Controller.dart';
 import 'package:flutter/material.dart';
 import 'package:avance1/modelo/Anuncio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,6 +13,7 @@ class CrearAnuncioScreen extends StatefulWidget {
 }
 
 class _CrearAnuncioScreenState extends State<CrearAnuncioScreen> {
+  FirebaseController baseDatos =  FirebaseController();
   final _formKey = GlobalKey<FormState>();
   final _tituloController = TextEditingController();
   final _contenidoController = TextEditingController();
@@ -45,6 +47,8 @@ class _CrearAnuncioScreenState extends State<CrearAnuncioScreen> {
         autor: "Admin", // Aquí puedes obtener el nombre del usuario logueado
         fecha: DateTime.now(),
       );
+
+      baseDatos.agregarAnuncio(anuncio);
 
       Navigator.pop(context, anuncio);
     }
