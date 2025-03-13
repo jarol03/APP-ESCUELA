@@ -48,14 +48,6 @@ class _PantallaCargaState extends State<PantallaCarga> {
   void initState() {
     super.initState();
     print("Pantalla de carga iniciada");
-    Grado primero = Grado(id: "1A", nombre: "Primero A");
-    Grado segundo = Grado(id: "2A", nombre: "Segundo A");
-    Grado tercero = Grado(id: "3A", nombre: "Tercero A");
-    Grado cuarto = Grado(id: "4A", nombre: "Cuarto A");
-    baseDatos.agregarGrado(primero);
-    baseDatos.agregarGrado(segundo);
-    baseDatos.agregarGrado(tercero);
-    baseDatos.agregarGrado(cuarto);
     _verificarSesion();
   }
 

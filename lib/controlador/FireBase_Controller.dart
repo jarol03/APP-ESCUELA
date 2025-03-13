@@ -165,8 +165,12 @@ class FirebaseController {
     if (gradoSnapshot.exists) {
       Grado grado = Grado.fromMap(gradoSnapshot.data() as Map<String, dynamic>);
 
-      grado.materias.add(materia);
+      // Verifica si la materia ya está asignada
+      if (!grado.materias.any((m) => m.id == materia.id)) {
+        grado.materias.add(materia); // Solo agregar si no está presente
+      }
 
+      // Actualiza la lista de materias en la base de datos
       await gradoRef.update({
         'materias': grado.materias.map((materia) => materia.toMap()).toList(),
       });
