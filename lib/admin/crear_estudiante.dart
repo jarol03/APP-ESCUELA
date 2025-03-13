@@ -27,25 +27,17 @@ class _CrearEstudianteScreenState extends State<CrearEstudianteScreen> {
   final _notaController = TextEditingController();
   bool _active = true; // Estado activo/inactivo
   Grado? _gradoSeleccionado;
-  final List<Grado> _grados = [
-    Grado(id: "01", nombre: "1A"),
-    Grado(id: "02", nombre: "2A"),
-    Grado(id: "03", nombre: "3A"),
-    Grado(id: "04", nombre: "4A"),
-    Grado(id: "05", nombre: "5A"),
-    Grado(id: "06", nombre: "6A"),
-    Grado(id: "06", nombre: "7A"),
-    Grado(id: "06", nombre: "8A"),
-  ];
+  List<Grado> _grados = [];
 
   @override
   void initState() {
     super.initState();
+    obtenerGrados();
     if (widget.estudiante != null) {
       _idController.text = widget.estudiante!.id; // Asignar el ID si existe
       _nombreController.text = widget.estudiante!.nombre;
       _apellidoController.text = widget.estudiante!.apellido;
-      _gradoSeleccionado = widget.estudiante!.grado;
+      //_gradoSeleccionado = widget.estudiante!.grado;//SI DESCOMENTO ESTA LINEA OBTENGO ERROR
       _emailController.text = widget.estudiante!.email;
       _telefonoController.text = widget.estudiante!.telefono;
       _usuarioController.text = widget.estudiante!.usuario;
@@ -53,6 +45,11 @@ class _CrearEstudianteScreenState extends State<CrearEstudianteScreen> {
       _notaController.text = widget.estudiante!.nota;
       _active = widget.estudiante!.active;
     }
+  }
+
+  Future<void> obtenerGrados() async {
+    _grados = await baseDatos.obtenerGrados();
+    setState(() {});
   }
 
   @override

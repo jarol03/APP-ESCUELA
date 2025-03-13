@@ -1,3 +1,4 @@
+import 'package:avance1/admin/crear_estudiante.dart';
 import 'package:avance1/controlador/FireBase_Controller.dart';
 import 'package:flutter/material.dart';
 import 'package:avance1/modelo/Alumno.dart';
@@ -83,14 +84,14 @@ class _VeriEstudianteScreenState extends State<VeriEstudianteScreen> {
                             title: Text(
                               "${alumno.nombre} ${alumno.apellido}",
                             ),
-                            subtitle: Text("Grado: ${alumno.grado}"),
+                            subtitle: Text("Grado: ${alumno.grado.nombre}"),
                             trailing: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 IconButton(
                                   icon: const Icon(Icons.edit, color: Colors.blue),
                                   onPressed: () {
-                                    // Lógica para editar estudiante
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => CrearEstudianteScreen(estudiante: alumno,)));
                                   },
                                 ),
                                 IconButton(

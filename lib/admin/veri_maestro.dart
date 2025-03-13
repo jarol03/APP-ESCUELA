@@ -1,3 +1,4 @@
+import 'package:avance1/admin/crear_maestro.dart';
 import 'package:avance1/controlador/FireBase_Controller.dart';
 import 'package:flutter/material.dart';
 import 'package:avance1/modelo/Maestro.dart';
@@ -85,7 +86,7 @@ class _VeriMaestroScreenState extends State<VeriMaestroScreen> {
                           IconButton(
                             icon: const Icon(Icons.edit, color: Colors.blue),
                             onPressed: () {
-                              // Lógica para editar maestro
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => CrearMaestroScreen(maestro: maestro,)));
                             },
                           ),
                           IconButton(
