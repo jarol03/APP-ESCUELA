@@ -27,6 +27,7 @@ class _AnunciosScreenState extends State<AnunciosScreen> {
 
   Future<void> obtenerAnuncios() async {
     _anuncios = await baseDatos.obtenerAnuncios();
+    setState(() {});
   }
 
   void _obtenerRolUsuario() async {
