@@ -2,6 +2,7 @@ import 'package:avance1/controlador/FireBase_Controller.dart';
 import 'package:avance1/modelo/Alumno.dart';
 import 'package:avance1/modelo/Maestro.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:avance1/vista/pantalla_login.dart';
 import 'package:avance1/anuncios.dart';
@@ -105,10 +106,10 @@ class HomeAdminContent extends StatelessWidget {
             children: [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
+                children:  [
                   Text("Bienvenido, Admin", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
                   SizedBox(height: 4),
-                  Text("Fecha actual", style: TextStyle(fontSize: 16, color: Colors.grey)),
+                  Text(DateFormat('dd/MM/yyyy').format(DateTime.now()), style: TextStyle(fontSize: 16, color: Colors.grey)),
                 ],
               ),
               const CircleAvatar(radius: 30, backgroundImage: AssetImage("assets/profile.jpg")),
