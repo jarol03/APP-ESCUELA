@@ -4,8 +4,8 @@ import 'package:avance1/modelo/Materia.dart';
 class Grado {
   final String id;
   final String nombre;
-  final List<Alumno> alumnos; // Lista de objetos Alumno
-  final List<Materia> materias; // Lista de objetos Materia
+  List<Alumno> alumnos; // Lista de objetos Alumno
+  List<Materia> materias; // Lista de objetos Materia
 
   Grado({
     required this.id,

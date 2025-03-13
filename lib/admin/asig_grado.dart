@@ -1,3 +1,4 @@
+import 'package:avance1/controlador/FireBase_Controller.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:avance1/vista/pantalla_login.dart';
@@ -12,11 +13,14 @@ class AsigGradoScreen extends StatefulWidget {
 }
 
 class _AsigGradoScreenState extends State<AsigGradoScreen> {
-  final List<Grado> _grados = [
-    Grado(id: "1", nombre: "Grado 1", alumnos: [], materias: []),
-    Grado(id: "2", nombre: "Grado 2", alumnos: [], materias: []),
-    // Agregar más grados aquí
-  ];
+  FirebaseController baseDatos = FirebaseController();
+  List<Grado> _grados = [];
+
+  @override
+  void initState() {
+    super.initState();
+    obtenerGrados();
+  }
 
   final List<Materia> _materias = [
     Materia(
@@ -39,43 +43,69 @@ class _AsigGradoScreenState extends State<AsigGradoScreen> {
         .toList();
   }
 
+  Future<void> obtenerGrados() async {
+    _grados = await baseDatos.obtenerGrados();
+    setState(() {});
+  }
+
   void _asignarMaterias(Grado grado) {
+    // Copiar las materias actuales del grado
+    List<Materia> materiasSeleccionadas = List.from(grado.materias);
+
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: const Text("Asignar materias"),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children:
-                _materias.map((materia) {
-                  return CheckboxListTile(
-                    title: Text(materia.nombre),
-                    value: grado.materias.contains(
-                      materia.id,
-                    ), // Usamos 'materias'
-                    onChanged: (value) {
-                      setState(() {
-                        if (value!) {
-                          grado.materias.add(materia); // Usamos 'materias'
-                        } else {
-                          grado.materias.remove(
-                            materia.id,
-                          ); // Usamos 'materias'
-                        }
-                      });
-                    },
-                  );
-                }).toList(),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text("Guardar"),
-            ),
-          ],
+        return StatefulBuilder(
+          // Usar StatefulBuilder para mantener el estado en el diálogo
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              title: const Text("Asignar materias"),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children:
+                    _materias.map((materia) {
+                      return CheckboxListTile(
+                        title: Text(materia.nombre),
+                        value: materiasSeleccionadas.any(
+                          (m) => m.id == materia.id,
+                        ), // Verifica si la materia está asignada
+                        onChanged: (value) {
+                          setDialogState(() {
+                            if (value!) {
+                              // Agregar la materia seleccionada
+                              if (!materiasSeleccionadas.any(
+                                (m) => m.id == materia.id,
+                              )) {
+                                materiasSeleccionadas.add(materia);
+                              }
+                            } else {
+                              // Eliminar la materia seleccionada
+                              materiasSeleccionadas.removeWhere(
+                                (m) => m.id == materia.id,
+                              );
+                            }
+                          });
+                        },
+                      );
+                    }).toList(),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () async {
+                    // Actualizar las materias del grado con el nuevo estado
+                    grado.materias = materiasSeleccionadas;
+                    // Guardamos el grado actualizado en la base de datos
+                    await baseDatos.agregarGrado(grado);
+                    setState(
+                      () {},
+                    ); // Refrescar la lista de grados en la pantalla principal
+                    Navigator.pop(context);
+                  },
+                  child: const Text("Guardar"),
+                ),
+              ],
+            );
+          },
         );
       },
     );

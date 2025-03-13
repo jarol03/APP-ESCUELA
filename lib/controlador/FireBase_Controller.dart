@@ -1,4 +1,5 @@
 import 'package:avance1/modelo/Grado.dart';
+import 'package:avance1/modelo/Materia.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../modelo/Alumno.dart';
 import '../modelo/Maestro.dart';
@@ -154,6 +155,21 @@ class FirebaseController {
     } catch (e) {
       print("Error al obtener maestros: $e");
       return [];
+    }
+  }
+
+  Future<void> agregarMateriaAGrado(String gradoID, Materia materia) async {
+    DocumentReference gradoRef = base.collection('grados').doc(gradoID);
+    DocumentSnapshot gradoSnapshot = await gradoRef.get();
+
+    if (gradoSnapshot.exists) {
+      Grado grado = Grado.fromMap(gradoSnapshot.data() as Map<String, dynamic>);
+
+      grado.materias.add(materia);
+
+      await gradoRef.update({
+        'materias': grado.materias.map((materia) => materia.toMap()).toList(),
+      });
     }
   }
 }
