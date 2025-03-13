@@ -1,0 +1,2 @@
+C:/Users/harol/Desktop/escuela/avance1/android/app/.cxx/RelWithDebInfo/3u3n2c6o/armeabi-v7a/CMakeFiles/edit_cache.dir
+C:/Users/harol/Desktop/escuela/avance1/android/app/.cxx/RelWithDebInfo/3u3n2c6o/armeabi-v7a/CMakeFiles/rebuild_cache.dir
