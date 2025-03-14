@@ -1,4 +1,5 @@
 import 'package:avance1/controlador/FireBase_Controller.dart';
+import 'package:avance1/modelo/Alumno.dart';
 import 'package:flutter/material.dart';
 import 'package:avance1/modelo/Materia.dart';
 import 'package:avance1/modelo/Maestro.dart';
@@ -6,7 +7,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:avance1/vista/pantalla_login.dart';
 
 class ClasesEstudianteScreen extends StatefulWidget {
-  const ClasesEstudianteScreen({super.key});
+  final Alumno alumno;
+  const ClasesEstudianteScreen({super.key, required this.alumno});
 
   @override
   _ClasesEstudianteScreenState createState() => _ClasesEstudianteScreenState();
@@ -15,15 +17,7 @@ class ClasesEstudianteScreen extends StatefulWidget {
 class _ClasesEstudianteScreenState extends State<ClasesEstudianteScreen> {
   FirebaseController baseDatos = FirebaseController();
   List<Maestro> maestros = [];
-  final List<Materia> _clases = [
-    Materia(
-      id: "1",
-      nombre: "Matemáticas",
-      descripcion: "Clase de matemáticas",
-    ),
-    Materia(id: "2", nombre: "Ciencias", descripcion: "Clase de ciencias"),
-    // Agregar más clases aquí
-  ];
+  List<Materia> _clases = [];
 
   Future<void> obtenerMaestros() async {
     maestros = await baseDatos.obtenerMaestros();
@@ -33,6 +27,7 @@ class _ClasesEstudianteScreenState extends State<ClasesEstudianteScreen> {
   void initState() {
     super.initState();
     obtenerMaestros();
+    _clases = widget.alumno.grado.materias;
   }
   
 

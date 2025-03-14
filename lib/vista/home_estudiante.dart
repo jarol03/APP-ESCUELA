@@ -26,7 +26,7 @@ class _HomeEstudianteState extends State<HomeEstudiante> {
   void initState() {
     super.initState();
     _pages = [
-      const HomeEstudianteContent(), // Pantalla principal (Inicio)
+      HomeEstudianteContent(alumno: widget.alumno,), // Pantalla principal (Inicio)
       const AnunciosScreen(), // Pantalla global de anuncios
       PerfilScreen(alumno: widget.alumno), // Pantalla global de perfil
     ];
@@ -77,7 +77,8 @@ class _HomeEstudianteState extends State<HomeEstudiante> {
 }
 
 class HomeEstudianteContent extends StatelessWidget {
-  const HomeEstudianteContent({super.key});
+  final Alumno alumno;
+  const HomeEstudianteContent({super.key, required this.alumno});
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +98,7 @@ class HomeEstudianteContent extends StatelessWidget {
             Icons.class_,
             "Clases",
             "Ver tus clases asignadas",
-            const ClasesEstudianteScreen(),
+            ClasesEstudianteScreen(alumno: alumno,),
           ),
           const SizedBox(height: 16),
           // Card para Notas

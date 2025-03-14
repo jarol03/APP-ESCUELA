@@ -79,14 +79,23 @@ class _VeriMaestroScreenState extends State<VeriMaestroScreen> {
                     margin: const EdgeInsets.only(bottom: 16),
                     child: ListTile(
                       title: Text("${maestro.nombre} ${maestro.apellido}"),
-                      subtitle: Text("Grado: ${maestro.gradosAsignados}"),
+                      subtitle: Text(
+                        "Grados: ${maestro.gradosAsignados.map((g) => g.id).join(', ')}",
+                      ),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           IconButton(
                             icon: const Icon(Icons.edit, color: Colors.blue),
                             onPressed: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => CrearMaestroScreen(maestro: maestro,)));
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder:
+                                      (context) =>
+                                          CrearMaestroScreen(maestro: maestro),
+                                ),
+                              );
                             },
                           ),
                           IconButton(
