@@ -1,50 +1,59 @@
+import 'package:avance1/modelo/Grado.dart';
+import 'package:avance1/modelo/Maestro.dart';
 import 'package:flutter/material.dart';
 import 'package:avance1/maestro/notas_maestro.dart';
 
 class ClasesScreen extends StatefulWidget {
-  const ClasesScreen({super.key});
+  final Maestro maestro;
+  const ClasesScreen({super.key, required this.maestro});
 
   @override
   _ClasesScreenState createState() => _ClasesScreenState();
 }
 
 class _ClasesScreenState extends State<ClasesScreen> {
-  final List<String> _grados = ["Grado 1", "Grado 2", "Grado 3"];
+  List<Grado> _grados = [];
   String _searchQuery = "";
 
-  List<String> get _filteredGrados {
+  @override
+  void initState() {
+    super.initState();
+    _grados = widget.maestro.gradosAsignados;
+  }
+
+  List<Grado> get _filteredGrados {
     return _grados
         .where(
-          (grado) => grado.toLowerCase().contains(_searchQuery.toLowerCase()),
+          (grado) => grado.nombre.toLowerCase().contains(_searchQuery.toLowerCase()),
         )
         .toList();
   }
 
-  void _mostrarAlumnos(String grado) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text("Alumnos de $grado"),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text("Lista de alumnos matriculados en $grado"),
-              // Aquí puedes agregar la lista de alumnos
-            ],
+  void _mostrarAlumnos(Grado grado) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: Text("Alumnos de ${grado.nombre}"),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: grado.alumnos.isNotEmpty
+              ? grado.alumnos.map((alumno) => Text(alumno.nombre)).toList()
+              : [const Text("No hay alumnos matriculados.")], // Mensaje si no hay alumnos
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text("Cerrar"),
           ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text("Cerrar"),
-            ),
-          ],
-        );
-      },
-    );
-  }
+        ],
+      );
+    },
+  );
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +89,7 @@ class _ClasesScreenState extends State<ClasesScreen> {
                   return Card(
                     margin: const EdgeInsets.only(bottom: 16),
                     child: ListTile(
-                      title: Text(grado),
+                      title: Text(grado.nombre),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [

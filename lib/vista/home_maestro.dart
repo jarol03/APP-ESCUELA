@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:avance1/vista/pantalla_login.dart';
 import 'package:avance1/modelo/Maestro.dart';
@@ -99,7 +100,7 @@ class HomeMaestroContent extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    "Martes 17/Marzo/2025",
+                    DateFormat('dd/MM/yyyy').format(DateTime.now()),
                     style: TextStyle(fontSize: 16, color: Colors.grey),
                   ),
                 ],
@@ -124,7 +125,7 @@ class HomeMaestroContent extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _buildInfoItem("Clases", "5"),
+                _buildInfoItem("Clases", maestro.gradosAsignados.length.toString()),
                 _buildInfoItem("Estudiantes", "25"),
               ],
             ),
@@ -153,7 +154,7 @@ class HomeMaestroContent extends StatelessWidget {
                     // Navegar a la pantalla de clases
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => ClasesScreen()),
+                      MaterialPageRoute(builder: (context) => ClasesScreen(maestro: maestro,)),
                     );
                   }),
                   const SizedBox(height: 16),

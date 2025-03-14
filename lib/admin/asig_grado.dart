@@ -54,7 +54,7 @@ class _AsigGradoScreenState extends State<AsigGradoScreen> {
 
     showDialog(
       context: context,
-      builder: (context) {
+      builder: (BuildContext context) {
         return StatefulBuilder(
           // Usar StatefulBuilder para mantener el estado en el diálogo
           builder: (context, setDialogState) {
@@ -95,7 +95,7 @@ class _AsigGradoScreenState extends State<AsigGradoScreen> {
                     // Actualizar las materias del grado con el nuevo estado
                     grado.materias = materiasSeleccionadas;
                     // Guardamos el grado actualizado en la base de datos
-                    await baseDatos.agregarGrado(grado);
+                    await baseDatos.actualizarGrado(grado);
                     setState(
                       () {},
                     ); // Refrescar la lista de grados en la pantalla principal

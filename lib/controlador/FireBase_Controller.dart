@@ -124,6 +124,14 @@ class FirebaseController {
     }
   }
 
+  // Método en FirebaseController para actualizar maestro
+  Future<void> actualizarMaestro(Maestro maestro) async {
+    // Actualizar solo el campo de las materias
+    await base.collection('maestros').doc(maestro.id).update({
+      'materias': maestro.materias.map((materia) => materia.toMap()).toList(),
+    });
+  }
+
   Future<void> eliminarAlumno(String id) async {
     await base.collection("alumnos").doc(id).delete();
   }
@@ -159,23 +167,11 @@ class FirebaseController {
     }
   }
 
-  Future<void> agregarMateriaAGrado(String gradoID, Materia materia) async {
-    DocumentReference gradoRef = base.collection('grados').doc(gradoID);
-    DocumentSnapshot gradoSnapshot = await gradoRef.get();
-
-    if (gradoSnapshot.exists) {
-      Grado grado = Grado.fromMap(gradoSnapshot.data() as Map<String, dynamic>);
-
-      // Verifica si la materia ya está asignada
-      if (!grado.materias.any((m) => m.id == materia.id)) {
-        grado.materias.add(materia); // Solo agregar si no está presente
-      }
-
-      // Actualiza la lista de materias en la base de datos
-      await gradoRef.update({
-        'materias': grado.materias.map((materia) => materia.toMap()).toList(),
-      });
-    }
+  Future<void> actualizarGrado(Grado grado) async {
+    // Actualizar solo el campo de las materias
+    await base.collection('grados').doc(grado.id).update({
+      'materias': grado.materias.map((materia) => materia.toMap()).toList(),
+    });
   }
 
   /**

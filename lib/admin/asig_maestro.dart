@@ -67,7 +67,7 @@ class _AsigMaestroScreenState extends State<AsigMaestroScreen> {
         return StatefulBuilder(
           builder: (context, setStateDialog) {
             return AlertDialog(
-              title: Text("Asignar materias a ${maestro.nombre}"),
+              title: Text("Asignar materias a ${maestro.nombre.split(" ")[0]}"),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children:
@@ -90,7 +90,7 @@ class _AsigMaestroScreenState extends State<AsigMaestroScreen> {
               ),
               actions: <Widget>[
                 TextButton(
-                  onPressed: () {
+                  onPressed: () async {
                     // Actualizar la lista de materias asignadas al maestro
                     maestro.materias =
                         _materias
@@ -99,16 +99,20 @@ class _AsigMaestroScreenState extends State<AsigMaestroScreen> {
                                   materiasSeleccionadas.contains(materia.id),
                             )
                             .toList();
+
+                    // Actualizar el maestro en Firebase
+                    await baseDatos.actualizarMaestro(maestro);
+
                     Navigator.of(context).pop();
                     setState(() {}); // Actualizar la UI
                   },
-                  child: Text("Guardar"),
+                  child: const Text("Guardar"),
                 ),
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: Text("Cancelar"),
+                  child: const Text("Cancelar"),
                 ),
               ],
             );
@@ -169,7 +173,9 @@ class _AsigMaestroScreenState extends State<AsigMaestroScreen> {
                     margin: const EdgeInsets.only(bottom: 16),
                     child: ListTile(
                       title: Text("${maestro.nombre} ${maestro.apellido}"),
-                      subtitle: Text("Grado: ${maestro.gradosAsignados}"),
+                      subtitle: Text(
+                        "Grados: ${maestro.gradosAsignados.map((g) => g.id).join(', ')}",
+                      ),
                       trailing: IconButton(
                         icon: const Icon(Icons.add, color: Colors.blue),
                         onPressed: () {
