@@ -71,7 +71,7 @@ class PerfilScreen extends StatelessWidget {
         _buildInfoRow("Email", alumno.email),
         _buildInfoRow("Teléfono", alumno.telefono),
         _buildInfoRow("Grado", alumno.grado.nombre),
-        _buildInfoRow("Materias", alumno.materias.join(", ")),
+        _buildInfoRow("Materias", alumno.grado.materias.join(", ")),
       ],
     );
   }

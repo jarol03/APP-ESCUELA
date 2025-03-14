@@ -216,7 +216,6 @@ class _CrearEstudianteScreenState extends State<CrearEstudianteScreen> {
         usuario: _usuarioController.text,
         contrasena: _contrasenaController.text,
         nota: _notaController.text,
-        materias: [],
         active: _active,
       );
 

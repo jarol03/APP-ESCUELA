@@ -70,7 +70,6 @@ class _ReportesScreenState extends State<ReportesScreen> {
               contrasena: "",
               nota: "",
               active: false,
-              materias: [],
             ),
       );
     });
@@ -115,7 +114,7 @@ class _ReportesScreenState extends State<ReportesScreen> {
                 ),
                 pw.Column(
                   children:
-                      _estudianteSeleccionado!.materias.map((materiaId) {
+                      _estudianteSeleccionado!.grado.materias.map((materiaId) {
                         final materia = _materias.firstWhere(
                           (m) => m.id == materiaId,
                           orElse:
@@ -251,7 +250,7 @@ class _ReportesScreenState extends State<ReportesScreen> {
                       Text("Materias inscritas:"),
                       Column(
                         children:
-                            _estudianteSeleccionado!.materias.map((materiaId) {
+                            _estudianteSeleccionado!.grado.materias.map((materiaId) {
                               final materia = _materias.firstWhere(
                                 (m) => m.id == materiaId,
                                 orElse:

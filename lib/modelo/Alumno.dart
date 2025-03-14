@@ -12,7 +12,6 @@ class Alumno {
   final String contrasena;
   final String nota;
   final bool active;
-  final List<Materia> materias; // Lista de objetos Materia
   final String rol = "alumno";
 
   Alumno({
@@ -26,7 +25,6 @@ class Alumno {
     required this.contrasena,
     required this.nota,
     required this.active,
-    required this.materias,
   });
 
   // Convertir a Map para Firestore
@@ -42,7 +40,6 @@ class Alumno {
       "contrasena": contrasena,
       "nota": nota,
       "active": active,
-      "materias": materias.map((m) => m?.toMap()).toList(), // Convertir lista de Materia a lista de Map
     };
   }
 
@@ -59,7 +56,6 @@ class Alumno {
       contrasena: data["contrasena"],
       nota: data["nota"],
       active: data["active"],
-      materias: (data["materias"] as List).map((m) => Materia.fromMap(m)).toList(), // Convertir lista de Map a lista de objetos Materia
     );
   }
 }
