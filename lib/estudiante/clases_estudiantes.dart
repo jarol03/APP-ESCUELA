@@ -121,7 +121,7 @@ class _ClasesEstudianteScreenState extends State<ClasesEstudianteScreen> {
                           Text(
                             "Maestro: ${maestro.nombre} ${maestro.apellido}",
                           ),
-                          Text("Nota: 8.5"),
+                          Text("Nota: ${widget.alumno.nota}"),
                         ],
                       ),
                     ),

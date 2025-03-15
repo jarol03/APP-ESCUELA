@@ -58,8 +58,8 @@ class PerfilScreen extends StatelessWidget {
         _buildInfoRow("Nombre", "${maestro.nombre}"),
         _buildInfoRow("Email", maestro.email),
         _buildInfoRow("Teléfono", maestro.telefono),
-        _buildInfoRow("Grado Asignado", maestro.gradosAsignados[0].nombre),
-        _buildInfoRow("Materias", maestro.materias.join(", ")),
+        _buildInfoRow("Grados Asignados", maestro.gradosAsignados.map((m) => m.nombre).join(", ")),
+        _buildInfoRow("Materias", maestro.materias.map((m) => m.nombre).join(", ")),
       ],
     );
   }
@@ -71,7 +71,8 @@ class PerfilScreen extends StatelessWidget {
         _buildInfoRow("Email", alumno.email),
         _buildInfoRow("Teléfono", alumno.telefono),
         _buildInfoRow("Grado", alumno.grado.nombre),
-        _buildInfoRow("Materias", alumno.grado.materias.join(", ")),
+        _buildInfoRow("Materias", alumno.grado.materias.map((m) => m.nombre).join(", ")),
+
       ],
     );
   }
