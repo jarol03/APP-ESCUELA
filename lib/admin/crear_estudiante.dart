@@ -46,30 +46,36 @@ class _CrearEstudianteScreenState extends State<CrearEstudianteScreen> {
   }
 
   Future<void> obtenerGrados() async {
-  _grados = await baseDatos.obtenerGrados();
-  
-  if (widget.estudiante != null) {
-    _gradoSeleccionado = _grados.firstWhere(
-      (grado) => grado.id == widget.estudiante!.grado.id, 
-      orElse: () => _grados.isNotEmpty ? _grados.first : Grado(id: '', nombre: 'Sin grado')
-    );
+    _grados = await baseDatos.obtenerGrados();
+
+    if (widget.estudiante != null) {
+      _gradoSeleccionado = _grados.firstWhere(
+        (grado) => grado.id == widget.estudiante!.grado.id,
+        orElse:
+            () =>
+                _grados.isNotEmpty
+                    ? _grados.first
+                    : Grado(id: '', nombre: 'Sin grado'),
+      );
+    }
+
+    setState(() {});
   }
-
-  setState(() {});
-}
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.estudiante == null ? "Crear Estudiante" : "Editar Estudiante"),
+        title: Text(
+          widget.estudiante == null ? "Crear Estudiante" : "Editar Estudiante",
+        ),
         backgroundColor: const Color.fromARGB(255, 100, 200, 236),
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () async {
-              final SharedPreferences prefs = await SharedPreferences.getInstance();
+              final SharedPreferences prefs =
+                  await SharedPreferences.getInstance();
               await prefs.clear();
               Navigator.pushReplacement(
                 context,
@@ -101,7 +107,11 @@ class _CrearEstudianteScreenState extends State<CrearEstudianteScreen> {
               const SizedBox(height: 16),
               _buildTextField("Usuario", _usuarioController),
               const SizedBox(height: 16),
-              _buildTextField("Contraseña", _contrasenaController, obscureText: true),
+              _buildTextField(
+                "Contraseña",
+                _contrasenaController,
+                obscureText: false,
+              ),
               const SizedBox(height: 16),
               _buildTextField("Nota", _notaController),
               const SizedBox(height: 16),
@@ -128,7 +138,12 @@ class _CrearEstudianteScreenState extends State<CrearEstudianteScreen> {
     );
   }
 
-  Widget _buildTextField(String label, TextEditingController controller, {bool obscureText = false, bool isNumber = false}) {
+  Widget _buildTextField(
+    String label,
+    TextEditingController controller, {
+    bool obscureText = false,
+    bool isNumber = false,
+  }) {
     return TextFormField(
       controller: controller,
       obscureText: obscureText,
@@ -149,19 +164,25 @@ class _CrearEstudianteScreenState extends State<CrearEstudianteScreen> {
     );
   }
 
-  Widget _buildDropdown(String label, List<Grado> items, Grado? value, Function(Grado?) onChanged) {
+  Widget _buildDropdown(
+    String label,
+    List<Grado> items,
+    Grado? value,
+    Function(Grado?) onChanged,
+  ) {
     return DropdownButtonFormField<Grado>(
       value: value,
       decoration: InputDecoration(
         labelText: label,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
       ),
-      items: items.map((item) {
-        return DropdownMenuItem<Grado>(
-          value: item,
-          child: Text(item.nombre),
-        );
-      }).toList(),
+      items:
+          items.map((item) {
+            return DropdownMenuItem<Grado>(
+              value: item,
+              child: Text(item.nombre),
+            );
+          }).toList(),
       onChanged: onChanged,
     );
   }
@@ -171,7 +192,6 @@ class _CrearEstudianteScreenState extends State<CrearEstudianteScreen> {
       final estudiante = Alumno(
         id: _idController.text,
         nombre: _nombreController.text,
-        apellido: _nombreController.text[1],
         grado: _gradoSeleccionado!,
         email: _emailController.text,
         telefono: _telefonoController.text,
@@ -182,7 +202,33 @@ class _CrearEstudianteScreenState extends State<CrearEstudianteScreen> {
       );
 
       baseDatos.agregarAlumno(estudiante);
-      print("Estudiante ${widget.estudiante == null ? 'creado' : 'actualizado'}: ${estudiante.nombre}");
+
+      // Mostrar mensaje de éxito
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            widget.estudiante == null
+                ? "Estudiante creado exitosamente"
+                : "Estudiante actualizado exitosamente",
+          ),
+          backgroundColor: Colors.green,
+        ),
+      );
+
+      if (widget.estudiante == null) {
+        // Limpiar los campos solo si estamos creando un nuevo estudiante
+        _idController.clear();
+        _nombreController.clear();
+        _emailController.clear();
+        _telefonoController.clear();
+        _usuarioController.clear();
+        _contrasenaController.clear();
+        _notaController.clear();
+        setState(() {
+          _gradoSeleccionado = null;
+          _active = true;
+        });
+      }
     }
   }
 }

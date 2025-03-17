@@ -62,7 +62,6 @@ class _ReportesScreenState extends State<ReportesScreen> {
             () => Alumno(
               id: "",
               nombre: "",
-              apellido: "",
               grado: Grado(id: "", nombre: ""),
               email: "",
               telefono: "",
@@ -97,7 +96,7 @@ class _ReportesScreenState extends State<ReportesScreen> {
                 ),
                 pw.SizedBox(height: 20),
                 pw.Text(
-                  "Nombre: ${_estudianteSeleccionado!.nombre} ${_estudianteSeleccionado!.apellido}",
+                  "Nombre: ${_estudianteSeleccionado!.nombre}",
                   style: pw.TextStyle(fontSize: 16),
                 ),
                 pw.Text(
@@ -238,7 +237,7 @@ class _ReportesScreenState extends State<ReportesScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Nombre: ${_estudianteSeleccionado!.nombre} ${_estudianteSeleccionado!.apellido}",
+                        "Nombre: ${_estudianteSeleccionado!.nombre}",
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,

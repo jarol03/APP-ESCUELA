@@ -4,7 +4,6 @@ import 'package:avance1/modelo/Materia.dart';
 class Alumno {
   final String id;
   final String nombre;
-  final String apellido;
   final Grado grado; // Objeto Grado
   final String email;
   final String telefono;
@@ -17,7 +16,6 @@ class Alumno {
   Alumno({
     required this.id,
     required this.nombre,
-    required this.apellido,
     required this.grado,
     required this.email,
     required this.telefono,
@@ -32,7 +30,6 @@ class Alumno {
     return {
       "id": id,
       "nombre": nombre,
-      "apellido": apellido,
       "grado": grado.toMap(), // Convertir Grado a Map
       "email": email,
       "telefono": telefono,
@@ -48,7 +45,6 @@ class Alumno {
     return Alumno(
       id: data["id"],
       nombre: data["nombre"],
-      apellido: data["apellido"],
       grado: Grado.fromMap(data["grado"]), // Convertir Map a objeto Grado
       email: data["email"],
       telefono: data["telefono"],

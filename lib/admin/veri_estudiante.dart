@@ -82,7 +82,7 @@ class _VeriEstudianteScreenState extends State<VeriEstudianteScreen> {
                           margin: const EdgeInsets.only(bottom: 16),
                           child: ListTile(
                             title: Text(
-                              "${alumno.nombre} ${alumno.apellido}",
+                              "${alumno.nombre}",
                             ),
                             subtitle: Text("Grado: ${alumno.grado.nombre}"),
                             trailing: Row(
