@@ -6,7 +6,10 @@ class Grado {
   final String nombre;
   List<Alumno> alumnos; // Lista de objetos Alumno
   List<Materia> materias; // Lista de objetos Materia
-
+/**
+ * A cada clase de cada grado hay que agregarle un ID
+ * 
+ */
   Grado({
     required this.id,
     required this.nombre,

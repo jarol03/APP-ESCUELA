@@ -33,18 +33,21 @@ class _VeriMaestroScreenState extends State<VeriMaestroScreen> {
   }
 
   List<Maestro> get _filteredMaestros {
-    return maestros
-        .where(
-          (maestro) =>
-              maestro.nombre.toLowerCase().contains(
-                _searchQuery.toLowerCase(),
-              ) ||
-              maestro.gradosAsignados[0].nombre.toLowerCase().contains(
-                _searchQuery.toLowerCase(),
-              ),
-        )
-        .toList();
-  }
+  return maestros.where((maestro) {
+    final nombreCoincide = maestro.nombre.toLowerCase().contains(
+      _searchQuery.toLowerCase(),
+    );
+
+    final gradosCoinciden = maestro.gradosAsignados.any(
+      (grado) => grado.nombre.toLowerCase().contains(
+        _searchQuery.toLowerCase(),
+      ),
+    );
+
+    return nombreCoincide || gradosCoinciden;
+  }).toList();
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +83,7 @@ class _VeriMaestroScreenState extends State<VeriMaestroScreen> {
                     child: ListTile(
                       title: Text("${maestro.nombre} ${maestro.apellido}"),
                       subtitle: Text(
-                        "Grados: ${maestro.gradosAsignados.map((g) => g.id).join(', ')}",
+                        "Grados: ${maestro.gradosAsignados.map((g) => g.nombre).join(', ')}",
                       ),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,

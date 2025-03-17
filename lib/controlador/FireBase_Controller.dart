@@ -168,22 +168,19 @@ class FirebaseController {
   }
 
   Future<void> actualizarGrado(Grado grado) async {
-    // 1. Actualizar solo el campo de las materias en el grado
     await base.collection('grados').doc(grado.id).update({
       'materias': grado.materias.map((materia) => materia.toMap()).toList(),
     });
 
-    // 2. Buscar a los alumnos cuyo campo "grado" tenga el mismo ID que el parámetro
     QuerySnapshot querySnapshot =
         await base
             .collection('alumnos')
             .where(
               'grado.id',
               isEqualTo: grado.id,
-            ) // Aquí, se busca por el ID del grado dentro del objeto "grado"
+            )
             .get();
 
-    // 3. Imprimir los nombres de los alumnos encontrados y actualizar su grado
     if (querySnapshot.docs.isNotEmpty) {
       for (var doc in querySnapshot.docs) {
         // Obtener el alumno
@@ -192,11 +189,8 @@ class FirebaseController {
         // Imprimir el nombre del alumno
         print('Alumno: ${alumno.nombre}');
 
-        // Actualizar el campo "grado" en el alumno con el nuevo grado y las materias actualizadas
         await base.collection('alumnos').doc(doc.id).update({
-          'grado':
-              grado
-                  .toMap(), // Actualizamos el grado con el nuevo objeto (incluyendo las materias)
+          'grado': grado.toMap(),
         });
 
         print('Grado del alumno ${alumno.nombre} actualizado');
