@@ -17,15 +17,14 @@ class CrearEstudianteScreen extends StatefulWidget {
 class _CrearEstudianteScreenState extends State<CrearEstudianteScreen> {
   final FirebaseController baseDatos = FirebaseController();
   final _formKey = GlobalKey<FormState>();
-  final _idController = TextEditingController(); // Campo para el ID
+  final _idController = TextEditingController();
   final _nombreController = TextEditingController();
-  final _apellidoController = TextEditingController();
   final _emailController = TextEditingController();
   final _telefonoController = TextEditingController();
   final _usuarioController = TextEditingController();
   final _contrasenaController = TextEditingController();
   final _notaController = TextEditingController();
-  bool _active = true; // Estado activo/inactivo
+  bool _active = true;
   Grado? _gradoSeleccionado;
   List<Grado> _grados = [];
 
@@ -34,10 +33,9 @@ class _CrearEstudianteScreenState extends State<CrearEstudianteScreen> {
     super.initState();
     obtenerGrados();
     if (widget.estudiante != null) {
-      _idController.text = widget.estudiante!.id; // Asignar el ID si existe
+      _idController.text = widget.estudiante!.id;
       _nombreController.text = widget.estudiante!.nombre;
-      _apellidoController.text = widget.estudiante!.apellido;
-      //_gradoSeleccionado = widget.estudiante!.grado;//SI DESCOMENTO ESTA LINEA OBTENGO ERROR
+      _gradoSeleccionado = widget.estudiante!.grado;
       _emailController.text = widget.estudiante!.email;
       _telefonoController.text = widget.estudiante!.telefono;
       _usuarioController.text = widget.estudiante!.usuario;
@@ -48,24 +46,30 @@ class _CrearEstudianteScreenState extends State<CrearEstudianteScreen> {
   }
 
   Future<void> obtenerGrados() async {
-    _grados = await baseDatos.obtenerGrados();
-    setState(() {});
+  _grados = await baseDatos.obtenerGrados();
+  
+  if (widget.estudiante != null) {
+    _gradoSeleccionado = _grados.firstWhere(
+      (grado) => grado.id == widget.estudiante!.grado.id, 
+      orElse: () => _grados.isNotEmpty ? _grados.first : Grado(id: '', nombre: 'Sin grado')
+    );
   }
+
+  setState(() {});
+}
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          widget.estudiante == null ? "Crear Estudiante" : "Editar Estudiante",
-        ),
+        title: Text(widget.estudiante == null ? "Crear Estudiante" : "Editar Estudiante"),
         backgroundColor: const Color.fromARGB(255, 100, 200, 236),
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () async {
-              final SharedPreferences prefs =
-                  await SharedPreferences.getInstance();
+              final SharedPreferences prefs = await SharedPreferences.getInstance();
               await prefs.clear();
               Navigator.pushReplacement(
                 context,
@@ -81,15 +85,9 @@ class _CrearEstudianteScreenState extends State<CrearEstudianteScreen> {
           key: _formKey,
           child: ListView(
             children: [
-              _buildTextField(
-                "ID (DNI)",
-                _idController,
-                isNumber: true,
-              ), // Campo numérico
+              _buildTextField("ID (DNI)", _idController, isNumber: true),
               const SizedBox(height: 16),
               _buildTextField("Nombre completo", _nombreController),
-              const SizedBox(height: 16),
-              _buildTextField("Apellido", _apellidoController),
               const SizedBox(height: 16),
               _buildDropdown("Grado", _grados, _gradoSeleccionado, (value) {
                 setState(() {
@@ -99,19 +97,11 @@ class _CrearEstudianteScreenState extends State<CrearEstudianteScreen> {
               const SizedBox(height: 16),
               _buildTextField("Correo electrónico", _emailController),
               const SizedBox(height: 16),
-              _buildTextField(
-                "Teléfono",
-                _telefonoController,
-                isNumber: true,
-              ), // Campo numérico
+              _buildTextField("Teléfono", _telefonoController, isNumber: true),
               const SizedBox(height: 16),
               _buildTextField("Usuario", _usuarioController),
               const SizedBox(height: 16),
-              _buildTextField(
-                "Contraseña",
-                _contrasenaController,
-                obscureText: true,
-              ),
+              _buildTextField("Contraseña", _contrasenaController, obscureText: true),
               const SizedBox(height: 16),
               _buildTextField("Nota", _notaController),
               const SizedBox(height: 16),
@@ -124,46 +114,25 @@ class _CrearEstudianteScreenState extends State<CrearEstudianteScreen> {
                   });
                 },
               ),
-              const SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: _submitForm,
-                child: Text(widget.estudiante == null ? "Crear" : "Actualizar"),
-              ),
             ],
           ),
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Inicio'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.announcement),
-            label: 'Anuncios',
-          ),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Perfil'),
-        ],
-        currentIndex: 0,
-        selectedItemColor: const Color.fromARGB(255, 100, 200, 236),
-        onTap: (index) {
-          // Navegar a la pantalla correspondiente
-        },
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: ElevatedButton(
+          onPressed: _submitForm,
+          child: Text(widget.estudiante == null ? "Crear" : "Actualizar"),
+        ),
       ),
     );
   }
 
-  Widget _buildTextField(
-    String label,
-    TextEditingController controller, {
-    bool obscureText = false,
-    bool isNumber = false,
-  }) {
+  Widget _buildTextField(String label, TextEditingController controller, {bool obscureText = false, bool isNumber = false}) {
     return TextFormField(
       controller: controller,
       obscureText: obscureText,
-      keyboardType:
-          isNumber
-              ? TextInputType.number
-              : TextInputType.text, // Teclado numérico o texto
+      keyboardType: isNumber ? TextInputType.number : TextInputType.text,
       decoration: InputDecoration(
         labelText: label,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
@@ -180,36 +149,29 @@ class _CrearEstudianteScreenState extends State<CrearEstudianteScreen> {
     );
   }
 
-  Widget _buildDropdown(
-  String label,
-  List<Grado> items, // Cambiar String por Grado
-  Grado? value,
-  Function(Grado?) onChanged,
-) {
-  return DropdownButtonFormField<Grado>( // Cambiar String por Grado
-    value: value,
-    decoration: InputDecoration(
-      labelText: label,
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-    ),
-    items: items.map((item) {
-      return DropdownMenuItem<Grado>( // Cambiar String por Grado
-        value: item,
-        child: Text(item.nombre), // Mostrar el nombre del grado
-      );
-    }).toList(),
-    onChanged: onChanged,
-  );
-}
-
+  Widget _buildDropdown(String label, List<Grado> items, Grado? value, Function(Grado?) onChanged) {
+    return DropdownButtonFormField<Grado>(
+      value: value,
+      decoration: InputDecoration(
+        labelText: label,
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+      items: items.map((item) {
+        return DropdownMenuItem<Grado>(
+          value: item,
+          child: Text(item.nombre),
+        );
+      }).toList(),
+      onChanged: onChanged,
+    );
+  }
 
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
-      // Crear o actualizar el estudiante
       final estudiante = Alumno(
-        id: _idController.text, // Asignar el ID
+        id: _idController.text,
         nombre: _nombreController.text,
-        apellido: _apellidoController.text,
+        apellido: _nombreController.text[1],
         grado: _gradoSeleccionado!,
         email: _emailController.text,
         telefono: _telefonoController.text,
@@ -220,20 +182,7 @@ class _CrearEstudianteScreenState extends State<CrearEstudianteScreen> {
       );
 
       baseDatos.agregarAlumno(estudiante);
-
-      _idController.clear();
-      _nombreController.clear();
-      _apellidoController.clear();
-      _emailController.clear();
-      _telefonoController.clear();
-      _usuarioController.clear();
-      _contrasenaController.clear();
-      _notaController.clear();
-
-      // Lógica para guardar o actualizar el estudiante
-      print(
-        "Estudiante ${widget.estudiante == null ? 'creado' : 'actualizado'}: ${estudiante.nombre}",
-      );
+      print("Estudiante ${widget.estudiante == null ? 'creado' : 'actualizado'}: ${estudiante.nombre}");
     }
   }
 }
