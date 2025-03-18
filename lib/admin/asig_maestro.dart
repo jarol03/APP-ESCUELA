@@ -172,7 +172,7 @@ class _AsigMaestroScreenState extends State<AsigMaestroScreen> {
                   return Card(
                     margin: const EdgeInsets.only(bottom: 16),
                     child: ListTile(
-                      title: Text("${maestro.nombre} ${maestro.apellido}"),
+                      title: Text("${maestro.nombre}"),
                       subtitle: Text(
                         "Grados: ${maestro.gradosAsignados.map((g) => g.id).join(', ')}",
                       ),

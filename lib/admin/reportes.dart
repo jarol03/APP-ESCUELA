@@ -171,7 +171,7 @@ class _ReportesScreenState extends State<ReportesScreen> {
                 children:
                     maestros.map((maestro) {
                       return pw.Text(
-                        "- ${maestro.nombre} ${maestro.apellido} (${maestro.gradosAsignados})",
+                        "- ${maestro.nombre} (${maestro.gradosAsignados})",
                         style: pw.TextStyle(fontSize: 14),
                       );
                     }).toList(),

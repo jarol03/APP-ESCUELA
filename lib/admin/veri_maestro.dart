@@ -33,21 +33,19 @@ class _VeriMaestroScreenState extends State<VeriMaestroScreen> {
   }
 
   List<Maestro> get _filteredMaestros {
-  return maestros.where((maestro) {
-    final nombreCoincide = maestro.nombre.toLowerCase().contains(
-      _searchQuery.toLowerCase(),
-    );
-
-    final gradosCoinciden = maestro.gradosAsignados.any(
-      (grado) => grado.nombre.toLowerCase().contains(
+    return maestros.where((maestro) {
+      final nombreCoincide = maestro.nombre.toLowerCase().contains(
         _searchQuery.toLowerCase(),
-      ),
-    );
+      );
 
-    return nombreCoincide || gradosCoinciden;
-  }).toList();
-}
+      final gradosCoinciden = maestro.gradosAsignados.any(
+        (grado) =>
+            grado.nombre.toLowerCase().contains(_searchQuery.toLowerCase()),
+      );
 
+      return nombreCoincide || gradosCoinciden;
+    }).toList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +79,7 @@ class _VeriMaestroScreenState extends State<VeriMaestroScreen> {
                   return Card(
                     margin: const EdgeInsets.only(bottom: 16),
                     child: ListTile(
-                      title: Text("${maestro.nombre} ${maestro.apellido}"),
+                      title: Text("${maestro.nombre}"),
                       subtitle: Text(
                         "Grados: ${maestro.gradosAsignados.map((g) => g.nombre).join(', ')}",
                       ),
@@ -90,8 +88,8 @@ class _VeriMaestroScreenState extends State<VeriMaestroScreen> {
                         children: [
                           IconButton(
                             icon: const Icon(Icons.edit, color: Colors.blue),
-                            onPressed: () {
-                              Navigator.push(
+                            onPressed: () async {
+                              await Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder:
@@ -99,6 +97,7 @@ class _VeriMaestroScreenState extends State<VeriMaestroScreen> {
                                           CrearMaestroScreen(maestro: maestro),
                                 ),
                               );
+                              obtenerMaestros();
                             },
                           ),
                           IconButton(

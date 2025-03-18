@@ -215,7 +215,9 @@ class _CrearEstudianteScreenState extends State<CrearEstudianteScreen> {
         ),
       );
 
-      if (widget.estudiante == null) {
+      if (widget.estudiante != null) {
+        Navigator.pop(context);
+      } else {
         // Limpiar los campos solo si estamos creando un nuevo estudiante
         _idController.clear();
         _nombreController.clear();

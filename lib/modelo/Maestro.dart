@@ -4,7 +4,6 @@ import 'package:avance1/modelo/Materia.dart';
 class Maestro {
   final String id;
   final String nombre;
-  final String apellido;
   List<Grado> gradosAsignados; // Lista de objetos Grado
   final String tipoMaestro;
   final String email;
@@ -17,7 +16,6 @@ class Maestro {
   Maestro({
     required this.id,
     required this.nombre,
-    required this.apellido,
     required this.gradosAsignados,
     required this.tipoMaestro,
     required this.email,
@@ -32,7 +30,6 @@ class Maestro {
     return {
       "id": id,
       "nombre": nombre,
-      "apellido": apellido,
       "gradosAsignados": gradosAsignados.map((g) => g.toMap()).toList(), // Convertir lista de Grado a lista de Map
       "tipoMaestro": tipoMaestro,
       "email": email,
@@ -49,7 +46,6 @@ class Maestro {
     return Maestro(
       id: data["id"],
       nombre: data["nombre"],
-      apellido: data["apellido"],
       gradosAsignados: (data["gradosAsignados"] as List).map((g) => Grado.fromMap(g)).toList(), // Convertir lista de Map a lista de objetos Grado
       tipoMaestro: data["tipoMaestro"],
       email: data["email"],

@@ -53,6 +53,8 @@ class _PantallaCargaState extends State<PantallaCarga> {
 
   void _verificarSesion() async {
     print("Verificando sesión...");
+    //await baseDatos.limpiarCache();//ESTO ES PORQUE ELIMINÉ COLECCIONES DESDE CONSOLEFIRE Y TUVE QUE BORRAR CACHE
+    //PARA ACTUALIZAR LOS DATOS DE LA APP
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 

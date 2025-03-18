@@ -95,7 +95,6 @@ class _ClasesEstudianteScreenState extends State<ClasesEstudianteScreen> {
                         () => Maestro(
                           id: "",
                           nombre: "Sin asignar",
-                          apellido: "",
                           gradosAsignados: [],
                           tipoMaestro: "",
                           email: "",
@@ -119,7 +118,7 @@ class _ClasesEstudianteScreenState extends State<ClasesEstudianteScreen> {
                         children: [
                           Text("Horario: Lunes y Miércoles 10:00 AM"),
                           Text(
-                            "Maestro: ${maestro.nombre} ${maestro.apellido}",
+                            "Maestro: ${maestro.nombre}",
                           ),
                           Text("Nota: ${widget.alumno.nota}"),
                         ],

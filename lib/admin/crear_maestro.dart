@@ -19,7 +19,6 @@ class _CrearMaestroScreenState extends State<CrearMaestroScreen> {
   final _formKey = GlobalKey<FormState>();
   final _idController = TextEditingController();
   final _nombreController = TextEditingController();
-  final _apellidoController = TextEditingController();
   final _emailController = TextEditingController();
   final _telefonoController = TextEditingController();
   final _usuarioController = TextEditingController();
@@ -35,7 +34,6 @@ class _CrearMaestroScreenState extends State<CrearMaestroScreen> {
     if (widget.maestro != null) {
       _idController.text = widget.maestro!.id;
       _nombreController.text = widget.maestro!.nombre;
-      _apellidoController.text = widget.maestro!.apellido;
       _gradosSeleccionados = widget.maestro!.gradosAsignados;
       _isMaestroGuia = widget.maestro!.tipoMaestro == "Maestro guía";
       _emailController.text = widget.maestro!.email;
@@ -83,8 +81,6 @@ class _CrearMaestroScreenState extends State<CrearMaestroScreen> {
               const SizedBox(height: 16),
               _buildTextField("Nombre completo", _nombreController),
               const SizedBox(height: 16),
-              _buildTextField("Apellido", _apellidoController),
-              const SizedBox(height: 16),
               _buildMultipleSelectionDropdown(
                 "Grados",
                 _grados,
@@ -106,7 +102,7 @@ class _CrearMaestroScreenState extends State<CrearMaestroScreen> {
               _buildTextField(
                 "Contraseña",
                 _contrasenaController,
-                obscureText: true,
+                obscureText: false,
               ),
               const SizedBox(height: 24),
               ElevatedButton(
@@ -190,7 +186,6 @@ class _CrearMaestroScreenState extends State<CrearMaestroScreen> {
       final maestro = Maestro(
         id: _idController.text,
         nombre: _nombreController.text,
-        apellido: _apellidoController.text,
         gradosAsignados: _gradosSeleccionados,
         tipoMaestro: _isMaestroGuia ? "Maestro guía" : "Maestro general",
         email: _emailController.text,
@@ -202,13 +197,28 @@ class _CrearMaestroScreenState extends State<CrearMaestroScreen> {
 
       baseDatos.agregarMaestro(maestro);
 
-      _idController.clear();
-      _nombreController.clear();
-      _apellidoController.clear();
-      _emailController.clear();
-      _telefonoController.clear();
-      _usuarioController.clear();
-      _contrasenaController.clear();
+      // Mostrar mensaje de éxito
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            widget.maestro == null
+                ? "Estudiante creado exitosamente"
+                : "Estudiante actualizado exitosamente",
+          ),
+          backgroundColor: Colors.green,
+        ),
+      );
+
+      if (widget.maestro != null) {
+        Navigator.pop(context);
+      } else {
+        _idController.clear();
+        _nombreController.clear();
+        _emailController.clear();
+        _telefonoController.clear();
+        _usuarioController.clear();
+        _contrasenaController.clear();
+      }
 
       print(
         "Maestro ${widget.maestro == null ? 'creado' : 'actualizado'}: ${maestro.nombre}",

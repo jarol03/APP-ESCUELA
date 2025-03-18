@@ -7,6 +7,11 @@ import '../modelo/Maestro.dart';
 
 class FirebaseController {
   final FirebaseFirestore base = FirebaseFirestore.instance;
+  
+  Future<void> limpiarCache() async {
+  await base.clearPersistence();
+  print("Caché de Firestore limpiada.");
+}
 
   Future<void> agregarAlumno(Alumno alumno) async {
     await base.collection('alumnos').doc(alumno.id).set(alumno.toMap());

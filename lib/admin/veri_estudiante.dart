@@ -72,40 +72,58 @@ class _VeriEstudianteScreenState extends State<VeriEstudianteScreen> {
             const SizedBox(height: 16),
             // Lista de estudiantes
             Expanded(
-              child: alumnos.isEmpty // Verificamos si la lista está vacía
-                  ? Center(child: CircularProgressIndicator()) // Mostramos un indicador de carga
-                  : ListView.builder(
-                      itemCount: _filteredEstudiantes.length,
-                      itemBuilder: (context, index) {
-                        final alumno = _filteredEstudiantes[index];
-                        return Card(
-                          margin: const EdgeInsets.only(bottom: 16),
-                          child: ListTile(
-                            title: Text(
-                              "${alumno.nombre}",
+              child:
+                  alumnos
+                          .isEmpty // Verificamos si la lista está vacía
+                      ? Center(
+                        child: CircularProgressIndicator(),
+                      ) // Mostramos un indicador de carga
+                      : ListView.builder(
+                        itemCount: _filteredEstudiantes.length,
+                        itemBuilder: (context, index) {
+                          final alumno = _filteredEstudiantes[index];
+                          return Card(
+                            margin: const EdgeInsets.only(bottom: 16),
+                            child: ListTile(
+                              title: Text("${alumno.nombre}"),
+                              subtitle: Text("Grado: ${alumno.grado.nombre}"),
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  IconButton(
+                                    icon: const Icon(
+                                      Icons.edit,
+                                      color: Colors.blue,
+                                    ),
+                                    onPressed: () async {
+                                      await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder:
+                                              (context) =>
+                                                  CrearEstudianteScreen(
+                                                    estudiante: alumno,
+                                                  ),
+                                        ),
+                                      );
+                                      _obtenerAlumnos(); // Se ejecuta cuando se vuelve a esta pantalla
+                                    },
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(
+                                      Icons.delete,
+                                      color: Colors.red,
+                                    ),
+                                    onPressed: () {
+                                      eliminarAlumno(alumno.id);
+                                    },
+                                  ),
+                                ],
+                              ),
                             ),
-                            subtitle: Text("Grado: ${alumno.grado.nombre}"),
-                            trailing: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                IconButton(
-                                  icon: const Icon(Icons.edit, color: Colors.blue),
-                                  onPressed: () {
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) => CrearEstudianteScreen(estudiante: alumno,)));
-                                  },
-                                ),
-                                IconButton(
-                                  icon: const Icon(Icons.delete, color: Colors.red),
-                                  onPressed: () {
-                                    eliminarAlumno(alumno.id);
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
+                          );
+                        },
+                      ),
             ),
           ],
         ),
