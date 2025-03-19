@@ -232,6 +232,10 @@ class FirebaseController {
   /// ===================================
   /// LOGICA PARA LAS MATERIAS
   /// ===================================
+  Future<void> agregarMateria(Materia materia) async{
+    await base.collection('materias').doc(materia.id).set(materia.toMap());
+  }
+  
   Future<List<Materia>> obtenerMaterias() async {
     try {
       QuerySnapshot querySnapshot = await base.collection('materias').get();

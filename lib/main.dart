@@ -1,6 +1,7 @@
 import 'package:avance1/controlador/FireBase_Controller.dart';
 import 'package:avance1/firebase_options.dart';
 import 'package:avance1/modelo/Alumno.dart';
+import 'package:avance1/modelo/Materia.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -46,6 +47,8 @@ class _PantallaCargaState extends State<PantallaCarga> {
   @override
   void initState() {
     super.initState();
+    Materia matematicas = Materia(id: "01", nombre: "Matemáticas", descripcion: "Clase de matemáticas");
+    baseDatos.agregarMateria(matematicas);
     print("Pantalla de carga iniciada");
     _verificarSesion();
   }
