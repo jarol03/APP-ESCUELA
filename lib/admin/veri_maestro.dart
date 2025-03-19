@@ -79,7 +79,7 @@ class _VeriMaestroScreenState extends State<VeriMaestroScreen> {
                   return Card(
                     margin: const EdgeInsets.only(bottom: 16),
                     child: ListTile(
-                      title: Text("${maestro.nombre}"),
+                      title: Text(maestro.nombre),
                       subtitle: Text(
                         "Grados: ${maestro.gradosAsignados.map((g) => g.nombre).join(', ')}",
                       ),

@@ -1,12 +1,12 @@
+import 'package:flutter/material.dart';
 import 'package:avance1/controlador/FireBase_Controller.dart';
 import 'package:avance1/modelo/Grado.dart';
-import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:avance1/vista/pantalla_login.dart';
 import 'package:avance1/modelo/Alumno.dart';
 
 class CrearEstudianteScreen extends StatefulWidget {
-  final Alumno? estudiante; // Parámetro opcional para edición
+  final Alumno? estudiante;
 
   const CrearEstudianteScreen({super.key, this.estudiante});
 
@@ -23,8 +23,8 @@ class _CrearEstudianteScreenState extends State<CrearEstudianteScreen> {
   final _telefonoController = TextEditingController();
   final _usuarioController = TextEditingController();
   final _contrasenaController = TextEditingController();
-  final _notaController = TextEditingController();
   bool _active = true;
+  bool _mostrarContrasena = false;
   Grado? _gradoSeleccionado;
   List<Grado> _grados = [];
 
@@ -40,7 +40,6 @@ class _CrearEstudianteScreenState extends State<CrearEstudianteScreen> {
       _telefonoController.text = widget.estudiante!.telefono;
       _usuarioController.text = widget.estudiante!.usuario;
       _contrasenaController.text = widget.estudiante!.contrasena;
-      _notaController.text = widget.estudiante!.nota;
       _active = widget.estudiante!.active;
     }
   }
@@ -85,11 +84,11 @@ class _CrearEstudianteScreenState extends State<CrearEstudianteScreen> {
           ),
         ],
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
-          child: ListView(
+          child: Column(
             children: [
               _buildTextField("ID (DNI)", _idController, isNumber: true),
               const SizedBox(height: 16),
@@ -107,13 +106,7 @@ class _CrearEstudianteScreenState extends State<CrearEstudianteScreen> {
               const SizedBox(height: 16),
               _buildTextField("Usuario", _usuarioController),
               const SizedBox(height: 16),
-              _buildTextField(
-                "Contraseña",
-                _contrasenaController,
-                obscureText: false,
-              ),
-              const SizedBox(height: 16),
-              _buildTextField("Nota", _notaController),
+              _buildTextFieldContrasena(),
               const SizedBox(height: 16),
               SwitchListTile(
                 title: const Text("Activo"),
@@ -124,15 +117,13 @@ class _CrearEstudianteScreenState extends State<CrearEstudianteScreen> {
                   });
                 },
               ),
+              const SizedBox(height: 32), // Espacio adicional antes del botón
+              ElevatedButton(
+                onPressed: _submitForm,
+                child: Text(widget.estudiante == null ? "Crear" : "Actualizar"),
+              ),
             ],
           ),
-        ),
-      ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: ElevatedButton(
-          onPressed: _submitForm,
-          child: Text(widget.estudiante == null ? "Crear" : "Actualizar"),
         ),
       ),
     );
@@ -159,6 +150,10 @@ class _CrearEstudianteScreenState extends State<CrearEstudianteScreen> {
         if (isNumber && !RegExp(r'^[0-9]+$').hasMatch(value)) {
           return "Solo se permiten números";
         }
+        if (label.contains("Correo electrónico") &&
+            !RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+          return "Ingrese un correo electrónico válido";
+        }
         return null;
       },
     );
@@ -184,6 +179,39 @@ class _CrearEstudianteScreenState extends State<CrearEstudianteScreen> {
             );
           }).toList(),
       onChanged: onChanged,
+      validator: (value) {
+        if (value == null) {
+          return "Este campo es obligatorio";
+        }
+        return null;
+      },
+    );
+  }
+
+  Widget _buildTextFieldContrasena() {
+    return TextFormField(
+      controller: _contrasenaController,
+      obscureText: !_mostrarContrasena,
+      decoration: InputDecoration(
+        labelText: "Contraseña",
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+        suffixIcon: IconButton(
+          icon: Icon(
+            _mostrarContrasena ? Icons.visibility : Icons.visibility_off,
+          ),
+          onPressed: () {
+            setState(() {
+              _mostrarContrasena = !_mostrarContrasena;
+            });
+          },
+        ),
+      ),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return "Este campo es obligatorio";
+        }
+        return null;
+      },
     );
   }
 
@@ -197,13 +225,12 @@ class _CrearEstudianteScreenState extends State<CrearEstudianteScreen> {
         telefono: _telefonoController.text,
         usuario: _usuarioController.text,
         contrasena: _contrasenaController.text,
-        nota: _notaController.text,
         active: _active,
+        nota: '',
       );
 
       baseDatos.agregarAlumno(estudiante);
 
-      // Mostrar mensaje de éxito
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
@@ -218,14 +245,12 @@ class _CrearEstudianteScreenState extends State<CrearEstudianteScreen> {
       if (widget.estudiante != null) {
         Navigator.pop(context);
       } else {
-        // Limpiar los campos solo si estamos creando un nuevo estudiante
         _idController.clear();
         _nombreController.clear();
         _emailController.clear();
         _telefonoController.clear();
         _usuarioController.clear();
         _contrasenaController.clear();
-        _notaController.clear();
         setState(() {
           _gradoSeleccionado = null;
           _active = true;

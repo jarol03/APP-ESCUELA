@@ -18,10 +18,13 @@ class _PantallaLoginState extends State<PantallaLogin> {
   final TextEditingController _usuarioController = TextEditingController();
   final TextEditingController _contrasenaController = TextEditingController();
   final FirebaseController _firebaseController = FirebaseController();
+  bool _mostrarContrasena = false; // Variable para mostrar/ocultar contraseña
 
   void manejarInicioSesion() async {
     final String usuario = _usuarioController.text.trim();
     final String contrasena = _contrasenaController.text.trim();
+    await _firebaseController.verificarConexion();
+
 
     // Buscar primero al alumno
     final Alumno? alumno = await _firebaseController.buscarAlumno(
@@ -45,7 +48,7 @@ class _PantallaLoginState extends State<PantallaLogin> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => HomeEstudiante(alumno: alumno,),
+          builder: (context) => HomeEstudiante(alumno: alumno),
         ), // Redirige al HomeEstudiante
       );
     } else if (maestro != null) {
@@ -96,6 +99,12 @@ class _PantallaLoginState extends State<PantallaLogin> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              // Imagen en un círculo
+              CircleAvatar(
+                radius: 50, // Tamaño del círculo
+                backgroundImage: AssetImage('assets/images/logoescuela.jpg'),
+              ),
+              SizedBox(height: 20), // Espacio entre la imagen y los inputs
               TextField(
                 controller: _usuarioController,
                 decoration: InputDecoration(
@@ -110,14 +119,28 @@ class _PantallaLoginState extends State<PantallaLogin> {
                 ),
               ),
               SizedBox(height: 20),
+              // Campo de contraseña con el ícono de ojo
               TextField(
                 controller: _contrasenaController,
-                obscureText: true,
+                obscureText: !_mostrarContrasena,
                 decoration: InputDecoration(
                   labelText: "Contraseña",
                   prefixIcon: Icon(
                     Icons.lock,
                     color: Color.fromARGB(255, 100, 200, 236),
+                  ),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _mostrarContrasena
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                      color: Color.fromARGB(255, 100, 200, 236),
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _mostrarContrasena = !_mostrarContrasena;
+                      });
+                    },
                   ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),

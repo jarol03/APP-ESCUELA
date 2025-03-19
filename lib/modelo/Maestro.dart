@@ -30,14 +30,14 @@ class Maestro {
     return {
       "id": id,
       "nombre": nombre,
-      "gradosAsignados": gradosAsignados.map((g) => g.toMap()).toList(), // Convertir lista de Grado a lista de Map
+      "gradosAsignados": gradosAsignados.map((g) => g.toMap()).toList(),
       "tipoMaestro": tipoMaestro,
       "email": email,
       "telefono": telefono,
       "usuario": usuario,
       "contrasena": contrasena,
       "rol": rol,
-      "materias": materias.map((m) => m.toMap()).toList(), // Convertir lista de Materia a lista de Map
+      "materias": materias.map((m) => m.toMap()).toList(),
     };
   }
 
@@ -46,13 +46,17 @@ class Maestro {
     return Maestro(
       id: data["id"],
       nombre: data["nombre"],
-      gradosAsignados: (data["gradosAsignados"] as List).map((g) => Grado.fromMap(g)).toList(), // Convertir lista de Map a lista de objetos Grado
+      gradosAsignados:
+          (data["gradosAsignados"] as List)
+              .map((g) => Grado.fromMap(g))
+              .toList(),
       tipoMaestro: data["tipoMaestro"],
       email: data["email"],
       telefono: data["telefono"],
       usuario: data["usuario"],
       contrasena: data["contrasena"],
-      materias: (data["materias"] as List).map((m) => Materia.fromMap(m)).toList(), // Convertir lista de Map a lista de objetos Materia
+      materias:
+          (data["materias"] as List).map((m) => Materia.fromMap(m)).toList(),
     );
   }
 }

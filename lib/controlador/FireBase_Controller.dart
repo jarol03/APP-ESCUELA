@@ -1,17 +1,35 @@
 import 'package:avance1/modelo/Anuncio.dart';
 import 'package:avance1/modelo/Grado.dart';
-import 'package:avance1/modelo/Materia.dart';
+import 'package:avance1/modelo/Materia.dart'; // Descomenta esta línea
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../modelo/Alumno.dart';
 import '../modelo/Maestro.dart';
 
 class FirebaseController {
   final FirebaseFirestore base = FirebaseFirestore.instance;
-  
+
   Future<void> limpiarCache() async {
-  await base.clearPersistence();
-  print("Caché de Firestore limpiada.");
+    await base.clearPersistence();
+    print("Caché de Firestore limpiada.");
+  }
+
+  Future<void> verificarConexion() async {
+  try {
+    // Intentar obtener un documento cualquiera de la colección "alumnos"
+    QuerySnapshot querySnapshot =
+        await base.collection('alumnos').limit(1).get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      print("✅ Conexión a Firestore exitosa. Documento encontrado: ${querySnapshot.docs.first.data()}");
+    } else {
+      print("⚠️ Conexión establecida, pero no hay alumnos en la base de datos.");
+    }
+  } catch (e) {
+    print("❌ No se pudo conectar a Firestore: $e");
+  }
 }
+
+
 
   Future<void> agregarAlumno(Alumno alumno) async {
     await base.collection('alumnos').doc(alumno.id).set(alumno.toMap());
@@ -57,22 +75,13 @@ class FirebaseController {
   }
 
   Future<Alumno?> buscarAlumno(String usuario, String contrasena) async {
-    //BUSCAMOS EN LA "TABLA" alumnos Y POR UNA "CONSULTA" COMO EN SQL BUSCANDO EN LOS VALORES USUARIO Y CONTRASEÑA
-    //SI LO ENCUENTRA LO OBTIENE Y SE ASIGNA A querySnapshot
     QuerySnapshot querySnapshot =
         await base
             .collection('alumnos')
-            .where('usuario', isEqualTo: usuario) // Filtramos por el usuario
-            .where(
-              'contrasena',
-              isEqualTo: contrasena,
-            ) // Filtramos por la contraseña
+            .where('usuario', isEqualTo: usuario)
+            .where('contrasena', isEqualTo: contrasena)
             .get();
 
-    //SI NO ESTÁ VACÍO O SEA QUE SI ENCONTRÓ ALGO, GUARDAMOS LA "TABLA" EN ESTE CASO DOCUMENTO PARA FIRESTORE
-    //Y OBTENEMOS EL PRIMER RESULTADO, CREAMOS UN ALUMNO MEDIANTE UN CONSTRUCTOR ESPECIAL
-    //QUE RECIBE UN Map<String, dynamic> PORQUE CONVERTIMOS LA DATA DEL DOCUMENTO A UN Map<String, dynamic>
-    //Y RETORNAMOS ESE ALUMNO, SI NO RETORNARÁ NULL
     if (querySnapshot.docs.isNotEmpty) {
       var alumnoDoc = querySnapshot.docs.first;
       Alumno alumno = Alumno.fromMap(alumnoDoc.data() as Map<String, dynamic>);
@@ -131,7 +140,6 @@ class FirebaseController {
 
   // Método en FirebaseController para actualizar maestro
   Future<void> actualizarMaestro(Maestro maestro) async {
-    // Actualizar solo el campo de las materias
     await base.collection('maestros').doc(maestro.id).update({
       'materias': maestro.materias.map((materia) => materia.toMap()).toList(),
     });
@@ -145,11 +153,9 @@ class FirebaseController {
     await base.collection("maestros").doc(id).delete();
   }
 
-  /**
-   * ===================================
-   * LOGICA PARA LOS GRADOS
-   * ===================================
-   */
+  /// ===================================
+  /// LOGICA PARA LOS GRADOS
+  /// ===================================
   Future<void> agregarGrado(Grado grado) async {
     await base.collection('grados').doc(grado.id).set(grado.toMap());
   }
@@ -175,23 +181,20 @@ class FirebaseController {
   Future<void> actualizarGrado(Grado grado) async {
     await base.collection('grados').doc(grado.id).update({
       'materias': grado.materias.map((materia) => materia.toMap()).toList(),
+      'maestros': grado.maestros.map((maestro) => maestro.toMap()).toList(),
+      'jornada': grado.jornada,
     });
 
+    // Actualizar el grado en los alumnos asociados
     QuerySnapshot querySnapshot =
         await base
             .collection('alumnos')
-            .where(
-              'grado.id',
-              isEqualTo: grado.id,
-            )
+            .where('grado.id', isEqualTo: grado.id)
             .get();
 
     if (querySnapshot.docs.isNotEmpty) {
       for (var doc in querySnapshot.docs) {
-        // Obtener el alumno
         Alumno alumno = Alumno.fromMap(doc.data() as Map<String, dynamic>);
-
-        // Imprimir el nombre del alumno
         print('Alumno: ${alumno.nombre}');
 
         await base.collection('alumnos').doc(doc.id).update({
@@ -205,11 +208,9 @@ class FirebaseController {
     }
   }
 
-  /**
-   * ===================================
-   * LOGICA PARA LOS ANUNCIOS
-   * ===================================
-   */
+  /// ===================================
+  /// LOGICA PARA LOS ANUNCIOS
+  /// ===================================
   Future<void> agregarAnuncio(Anuncio anuncio) async {
     await base.collection('anuncios').doc(anuncio.id).set(anuncio.toMap());
   }
@@ -224,6 +225,23 @@ class FirebaseController {
       return anuncios;
     } catch (e) {
       print("Error al obtener anuncios: $e");
+      return [];
+    }
+  }
+
+  /// ===================================
+  /// LOGICA PARA LAS MATERIAS
+  /// ===================================
+  Future<List<Materia>> obtenerMaterias() async {
+    try {
+      QuerySnapshot querySnapshot = await base.collection('materias').get();
+      List<Materia> materias =
+          querySnapshot.docs.map((doc) {
+            return Materia.fromMap(doc.data() as Map<String, dynamic>);
+          }).toList();
+      return materias;
+    } catch (e) {
+      print("Error al obtener materias: $e");
       return [];
     }
   }

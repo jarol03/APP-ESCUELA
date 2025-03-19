@@ -85,7 +85,7 @@ class _VeriEstudianteScreenState extends State<VeriEstudianteScreen> {
                           return Card(
                             margin: const EdgeInsets.only(bottom: 16),
                             child: ListTile(
-                              title: Text("${alumno.nombre}"),
+                              title: Text(alumno.nombre),
                               subtitle: Text("Grado: ${alumno.grado.nombre}"),
                               trailing: Row(
                                 mainAxisSize: MainAxisSize.min,

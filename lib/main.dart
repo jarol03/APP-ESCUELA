@@ -1,7 +1,6 @@
 import 'package:avance1/controlador/FireBase_Controller.dart';
 import 'package:avance1/firebase_options.dart';
 import 'package:avance1/modelo/Alumno.dart';
-import 'package:avance1/modelo/Grado.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';

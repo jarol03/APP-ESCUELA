@@ -55,11 +55,17 @@ class PerfilScreen extends StatelessWidget {
   Widget _buildMaestroInfo(Maestro maestro) {
     return Column(
       children: [
-        _buildInfoRow("Nombre", "${maestro.nombre}"),
+        _buildInfoRow("Nombre", maestro.nombre),
         _buildInfoRow("Email", maestro.email),
         _buildInfoRow("Teléfono", maestro.telefono),
-        _buildInfoRow("Grados Asignados", maestro.gradosAsignados.map((m) => m.nombre).join(", ")),
-        _buildInfoRow("Materias", maestro.materias.map((m) => m.nombre).join(", ")),
+        _buildInfoRow(
+          "Grados Asignados",
+          maestro.gradosAsignados.map((m) => m.nombre).join(", "),
+        ),
+        _buildInfoRow(
+          "Materias",
+          maestro.materias.map((m) => m.nombre).join(", "),
+        ),
       ],
     );
   }
@@ -67,12 +73,14 @@ class PerfilScreen extends StatelessWidget {
   Widget _buildAlumnoInfo(Alumno alumno) {
     return Column(
       children: [
-        _buildInfoRow("Nombre", "${alumno.nombre}"),
+        _buildInfoRow("Nombre", alumno.nombre),
         _buildInfoRow("Email", alumno.email),
         _buildInfoRow("Teléfono", alumno.telefono),
         _buildInfoRow("Grado", alumno.grado.nombre),
-        _buildInfoRow("Materias", alumno.grado.materias.map((m) => m.nombre).join(", ")),
-
+        _buildInfoRow(
+          "Materias",
+          alumno.grado.materias.map((m) => m.nombre).join(", "),
+        ),
       ],
     );
   }
@@ -80,7 +88,7 @@ class PerfilScreen extends StatelessWidget {
   Widget _buildAdminInfo(Perfil perfil) {
     return Column(
       children: [
-        _buildInfoRow("Nombre", "${perfil.nombre}"),
+        _buildInfoRow("Nombre", perfil.nombre),
         _buildInfoRow("Email", perfil.email),
         _buildInfoRow("Teléfono", perfil.telefono),
         _buildInfoRow("Rol", perfil.rol),

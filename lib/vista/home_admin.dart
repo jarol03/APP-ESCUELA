@@ -8,7 +8,6 @@ import 'package:avance1/vista/pantalla_login.dart';
 import 'package:avance1/anuncios.dart';
 import 'package:avance1/perfil.dart';
 import 'package:avance1/admin/credenciales.dart';
-import 'package:avance1/admin/asignaciones.dart';
 import 'package:avance1/admin/reportes.dart';
 
 class HomeAdmin extends StatefulWidget {
@@ -54,16 +53,18 @@ class _HomeAdminState extends State<HomeAdmin> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: cargando
-          ? const Center(child: CircularProgressIndicator())
-          : _pages[_selectedIndex],
+      body:
+          cargando
+              ? const Center(child: CircularProgressIndicator())
+              : _pages[_selectedIndex],
       appBar: AppBar(
         title: const Text("Panel Admin"),
         actions: [
           IconButton(
             icon: const Icon(Icons.logout, size: 30),
             onPressed: () async {
-              final SharedPreferences prefs = await SharedPreferences.getInstance();
+              final SharedPreferences prefs =
+                  await SharedPreferences.getInstance();
               await prefs.clear();
               Navigator.pushReplacement(
                 context,
@@ -76,7 +77,10 @@ class _HomeAdminState extends State<HomeAdmin> {
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Inicio'),
-          BottomNavigationBarItem(icon: Icon(Icons.announcement), label: 'Anuncios'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.announcement),
+            label: 'Anuncios',
+          ),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Perfil'),
         ],
         currentIndex: _selectedIndex,
@@ -91,7 +95,11 @@ class HomeAdminContent extends StatelessWidget {
   final List<Alumno> alumnos;
   final List<Maestro> maestros;
 
-  const HomeAdminContent({super.key, required this.alumnos, required this.maestros});
+  const HomeAdminContent({
+    super.key,
+    required this.alumnos,
+    required this.maestros,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -106,13 +114,22 @@ class HomeAdminContent extends StatelessWidget {
             children: [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children:  [
-                  Text("Bienvenido, Admin", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                children: [
+                  Text(
+                    "Bienvenido, Admin",
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  ),
                   SizedBox(height: 4),
-                  Text(DateFormat('dd/MM/yyyy').format(DateTime.now()), style: TextStyle(fontSize: 16, color: Colors.grey)),
+                  Text(
+                    DateFormat('dd/MM/yyyy').format(DateTime.now()),
+                    style: TextStyle(fontSize: 16, color: Colors.grey),
+                  ),
                 ],
               ),
-              const CircleAvatar(radius: 30, backgroundImage: AssetImage("assets/profile.jpg")),
+              const CircleAvatar(
+                radius: 30,
+                backgroundImage: AssetImage("assets/profile.jpg"),
+              ),
             ],
           ),
           const SizedBox(height: 20),
@@ -121,7 +138,9 @@ class HomeAdminContent extends StatelessWidget {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(12),
-              boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 5)],
+              boxShadow: const [
+                BoxShadow(color: Colors.black12, blurRadius: 5),
+              ],
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -132,7 +151,10 @@ class HomeAdminContent extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
-          const Text("Tareas", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          const Text(
+            "Tareas",
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
           const SizedBox(height: 10),
           Expanded(
             child: Container(
@@ -140,15 +162,35 @@ class HomeAdminContent extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(20),
-                boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 5)],
+                boxShadow: const [
+                  BoxShadow(color: Colors.black12, blurRadius: 5),
+                ],
               ),
               child: Column(
                 children: [
-                  _buildTaskRow(context, Icons.person, "Credenciales", () => Navigator.push(context, MaterialPageRoute(builder: (context) => const CredencialesScreen()))),
+                  _buildTaskRow(
+                    context,
+                    Icons.person,
+                    "Credenciales",
+                    () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const CredencialesScreen(),
+                      ),
+                    ),
+                  ),
                   const SizedBox(height: 16),
-                  _buildTaskRow(context, Icons.assignment, "Asignaciones", () => Navigator.push(context, MaterialPageRoute(builder: (context) => const AsignacionesScreen()))),
-                  const SizedBox(height: 16),
-                  _buildTaskRow(context, Icons.bar_chart, "Reportes", () => Navigator.push(context, MaterialPageRoute(builder: (context) => const ReportesScreen()))),
+                  _buildTaskRow(
+                    context,
+                    Icons.bar_chart,
+                    "Reportes",
+                    () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ReportesScreen(),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -161,25 +203,43 @@ class HomeAdminContent extends StatelessWidget {
   Widget _buildInfoItem(String title, String value) {
     return Column(
       children: [
-        Text(value, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Color.fromARGB(255, 100, 200, 236))),
+        Text(
+          value,
+          style: const TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: Color.fromARGB(255, 100, 200, 236),
+          ),
+        ),
         const SizedBox(height: 4),
         Text(title, style: const TextStyle(fontSize: 16, color: Colors.grey)),
       ],
     );
   }
 
-  Widget _buildTaskRow(BuildContext context, IconData icon, String title, VoidCallback onTap) {
+  Widget _buildTaskRow(
+    BuildContext context,
+    IconData icon,
+    String title,
+    VoidCallback onTap,
+  ) {
     return GestureDetector(
       onTap: onTap,
       child: Row(
         children: [
           Container(
             padding: const EdgeInsets.all(12),
-            decoration: const BoxDecoration(color: Color.fromARGB(255, 100, 200, 236), shape: BoxShape.circle),
+            decoration: const BoxDecoration(
+              color: Color.fromARGB(255, 100, 200, 236),
+              shape: BoxShape.circle,
+            ),
             child: Icon(icon, size: 24, color: Colors.white),
           ),
           const SizedBox(width: 16),
-          Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          Text(
+            title,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
         ],
       ),
     );

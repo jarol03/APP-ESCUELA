@@ -4,6 +4,9 @@ import 'package:avance1/vista/pantalla_login.dart';
 import 'package:avance1/admin/crear_estudiante.dart';
 import 'package:avance1/admin/crear_maestro.dart';
 import 'package:avance1/admin/verificacion.dart';
+import 'package:avance1/anuncios.dart';
+import 'package:avance1/perfil.dart';
+import 'package:avance1/admin/crear_grados.dart';
 
 class CredencialesScreen extends StatelessWidget {
   const CredencialesScreen({super.key});
@@ -20,8 +23,7 @@ class CredencialesScreen extends StatelessWidget {
             onPressed: () async {
               final SharedPreferences prefs =
                   await SharedPreferences.getInstance();
-              await prefs
-                  .clear(); // Borra todas las claves/valores de SharedPreferences
+              await prefs.clear();
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => const PantallaLogin()),
@@ -41,7 +43,7 @@ class CredencialesScreen extends StatelessWidget {
               Icons.person,
               "MAESTRO",
               "Crear usuario para maestros",
-              const CrearMaestroScreen(), // Navega a crear_maestro.dart
+              const CrearMaestroScreen(),
             ),
             const SizedBox(height: 16),
             // Tarjeta para Estudiante
@@ -50,7 +52,16 @@ class CredencialesScreen extends StatelessWidget {
               Icons.school,
               "ESTUDIANTE",
               "Crear usuario para estudiante",
-              const CrearEstudianteScreen(), // Navega a crear_estudiante.dart
+              const CrearEstudianteScreen(),
+            ),
+            const SizedBox(height: 16),
+            // Tarjeta para Grado
+            _buildCard(
+              context,
+              Icons.class_,
+              "GRADO",
+              "Crear y asignar materias a grados",
+              const CrearGradoScreen(),
             ),
             const SizedBox(height: 16),
             // Tarjeta para Verificación
@@ -58,8 +69,8 @@ class CredencialesScreen extends StatelessWidget {
               context,
               Icons.verified_user,
               "Verificación",
-              "Elimina, modifica o muestra la lista de los usuarios por grado.",
-              const VerificacionScreen(), // Navega a verificacion.dart
+              "Verificar credenciales de maeastros, estudiantes o grados",
+              const VerificacionScreen(),
             ),
           ],
         ),
@@ -73,7 +84,7 @@ class CredencialesScreen extends StatelessWidget {
           ),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Perfil'),
         ],
-        currentIndex: 0, // Índice de la pantalla actual
+        currentIndex: 0,
         selectedItemColor: const Color.fromARGB(255, 100, 200, 236),
         onTap: (index) {
           // Navegar a la pantalla correspondiente
@@ -82,10 +93,17 @@ class CredencialesScreen extends StatelessWidget {
               // Navegar a Home
               break;
             case 1:
-              // Navegar a Anuncios
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const AnunciosScreen()),
+              );
+
               break;
             case 2:
-              // Navegar a Perfil
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const PerfilScreen()),
+              );
               break;
           }
         },
@@ -107,7 +125,7 @@ class CredencialesScreen extends StatelessWidget {
         Navigator.push(context, MaterialPageRoute(builder: (context) => page));
       },
       child: Card(
-        elevation: 4, // Sombra de la tarjeta
+        elevation: 4,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         child: Padding(
           padding: const EdgeInsets.all(16),

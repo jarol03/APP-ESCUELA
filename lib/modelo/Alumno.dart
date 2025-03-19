@@ -1,5 +1,4 @@
 import 'package:avance1/modelo/Grado.dart';
-import 'package:avance1/modelo/Materia.dart';
 
 class Alumno {
   final String id;
