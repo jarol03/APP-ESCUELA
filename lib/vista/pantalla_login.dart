@@ -23,7 +23,7 @@ class _PantallaLoginState extends State<PantallaLogin> {
   void manejarInicioSesion() async {
     final String usuario = _usuarioController.text.trim();
     final String contrasena = _contrasenaController.text.trim();
-    await _firebaseController.verificarConexion();
+    //await _firebaseController.verificarConexion();
 
 
     // Buscar primero al alumno
