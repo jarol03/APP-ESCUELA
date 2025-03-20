@@ -91,9 +91,10 @@ class _HomeAdminState extends State<HomeAdmin> {
   }
 }
 
-class HomeAdminContent extends StatelessWidget {
+class HomeAdminContent extends StatefulWidget {
   final List<Alumno> alumnos;
   final List<Maestro> maestros;
+  
 
   const HomeAdminContent({
     super.key,
@@ -101,6 +102,11 @@ class HomeAdminContent extends StatelessWidget {
     required this.maestros,
   });
 
+  @override
+  State<HomeAdminContent> createState() => _HomeAdminContentState();
+}
+
+class _HomeAdminContentState extends State<HomeAdminContent> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -145,8 +151,8 @@ class HomeAdminContent extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _buildInfoItem("Estudiantes", alumnos.length.toString()),
-                _buildInfoItem("Maestros", maestros.length.toString()),
+                _buildInfoItem("Estudiantes", widget.alumnos.length.toString()),
+                _buildInfoItem("Maestros", widget.maestros.length.toString()),
               ],
             ),
           ),
