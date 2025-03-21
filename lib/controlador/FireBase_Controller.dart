@@ -124,6 +124,20 @@ class FirebaseController {
     }
   }
 
+  Stream<List<Alumno>> obtenerAlumnosStream() {
+  try {
+    return base.collection('alumnos').snapshots().map((querySnapshot) {
+      return querySnapshot.docs.map((doc) {
+        return Alumno.fromMap(doc.data() as Map<String, dynamic>);
+      }).toList();
+    });
+  } catch (e) {
+    print("Error al obtener alumnos: $e");
+    return Stream.value([]);
+  }
+}
+  
+
   Future<List<Maestro>> obtenerMaestros() async {
     try {
       QuerySnapshot querySnapshot = await base.collection('maestros').get();
