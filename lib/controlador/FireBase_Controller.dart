@@ -243,6 +243,10 @@ class FirebaseController {
     await base.collection('anuncios').doc(anuncio.id).set(anuncio.toMap());
   }
 
+  Future<void> eliminarAnuncio(String id) async {
+    await base.collection("anuncios").doc(id).delete();
+  }
+
   Future<List<Anuncio>> obtenerAnuncios() async {
   try {
     QuerySnapshot querySnapshot = await base

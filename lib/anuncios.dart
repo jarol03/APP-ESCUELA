@@ -71,6 +71,7 @@ class _AnunciosScreenState extends State<AnunciosScreen> {
   void _eliminarAnuncio(String id) {
     setState(() {
       _anuncios.removeWhere((a) => a.id == id);
+      baseDatos.eliminarAnuncio(id);
     });
   }
 
@@ -85,42 +86,60 @@ class _AnunciosScreenState extends State<AnunciosScreen> {
             IconButton(icon: const Icon(Icons.add), onPressed: _crearAnuncio),
         ],
       ),
-      body: ListView.builder(
-        itemCount: _anuncios.length,
-        itemBuilder: (context, index) {
-          final anuncio = _anuncios[index];
-          return Card(
-            margin: const EdgeInsets.all(8.0),
-            child: ListTile(
-              title: Text(anuncio.titulo),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(anuncio.contenido),
-                  const SizedBox(height: 8),
-                  Text(
-                    "Publicado por: ${anuncio.autor} - ${anuncio.fecha.toString()}",
-                    style: const TextStyle(fontSize: 12, color: Colors.grey),
+      body: StreamBuilder(
+        stream: baseDatos.obtenerAnunciosStream(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          return ListView.builder(
+            itemCount: _anuncios.length,
+            itemBuilder: (context, index) {
+              final anuncio = _anuncios[index];
+              return Card(
+                margin: const EdgeInsets.all(8.0),
+                child: ListTile(
+                  title: Text(anuncio.titulo),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(anuncio.contenido),
+                      const SizedBox(height: 8),
+                      Text(
+                        "Publicado por: ${anuncio.autor} - ${anuncio.fecha.toString()}",
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-              trailing:
-                  (_rolUsuario == "admin" || _rolUsuario == "maestro")
-                      ? Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            icon: const Icon(Icons.edit, color: Colors.blue),
-                            onPressed: () => _editarAnuncio(anuncio),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.delete, color: Colors.red),
-                            onPressed: () => _eliminarAnuncio(anuncio.id),
-                          ),
-                        ],
-                      )
-                      : null,
-            ),
+                  trailing:
+                      (_rolUsuario == "admin" || _rolUsuario == "maestro")
+                          ? Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                icon: const Icon(
+                                  Icons.edit,
+                                  color: Colors.blue,
+                                ),
+                                onPressed: () => _editarAnuncio(anuncio),
+                              ),
+                              IconButton(
+                                icon: const Icon(
+                                  Icons.delete,
+                                  color: Colors.red,
+                                ),
+                                onPressed: () => _eliminarAnuncio(anuncio.id),
+                              ),
+                            ],
+                          )
+                          : null,
+                ),
+              );
+            },
           );
         },
       ),
