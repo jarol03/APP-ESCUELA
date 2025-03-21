@@ -135,45 +135,52 @@ class _HomeAdminContentState extends State<HomeAdminContent> {
               ),
               const CircleAvatar(
                 radius: 30,
-                //backgroundImage: AssetImage("assets/profile.jpg"),
+                backgroundImage: AssetImage("assets/images/profile.jpg"),
               ),
             ],
           ),
           const SizedBox(height: 20),
-          StreamBuilder(
-            stream: baseDatos.obtenerAlumnosStream(),
-            builder: (context, snapthot) {
-              if (snapthot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
-              }
-
-              if (snapthot.hasError) return Text("Error: ${snapthot.error}");
-
-              List<Alumno> alumnos = snapthot.data!;
-
-              return Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: const [
-                    BoxShadow(color: Colors.black12, blurRadius: 5),
-                  ],
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: const [
+                BoxShadow(color: Colors.black12, blurRadius: 5),
+              ],
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                StreamBuilder(
+                  stream: baseDatos.obtenerAlumnosStream(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    List<Alumno> alumnos = snapshot.data!;
+                    return _buildInfoItem(
+                      "Estudiantes",
+                      alumnos.length.toString(),
+                    );
+                  },
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    _buildInfoItem("Estudiantes", alumnos.length.toString()),
-                    _buildInfoItem(
+                StreamBuilder(
+                  stream: baseDatos.obtenerMaestrosStream(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    List<Maestro> maestros = snapshot.data!;
+                    return _buildInfoItem(
                       "Maestros",
-                      widget.maestros.length.toString(),
-                    ),
-                  ],
+                      maestros.length.toString(),
+                    );
+                  },
                 ),
-              );
-            },
+              ],
+            ),
           ),
-
           const SizedBox(height: 20),
           const Text(
             "Tareas",

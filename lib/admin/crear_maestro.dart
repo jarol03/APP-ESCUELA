@@ -70,33 +70,72 @@ class _CrearMaestroScreenState extends State<CrearMaestroScreen> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              _buildTextField("ID (DNI)", _idController, isNumber: true),
-              const SizedBox(height: 16),
-              _buildTextField("Nombre completo", _nombreController),
-              const SizedBox(height: 16),
-              _buildMultiSelectGrados(),
-              const SizedBox(height: 16),
-              _buildTextField("Correo electrónico", _emailController),
-              const SizedBox(height: 16),
-              _buildTextField("Teléfono", _telefonoController, isNumber: true),
-              const SizedBox(height: 16),
-              _buildTextField("Usuario", _usuarioController),
-              const SizedBox(height: 16),
-              _buildTextFieldContrasena(),
-              const SizedBox(height: 32), // Espacio adicional antes del botón
-              ElevatedButton(
-                onPressed: _submitForm,
-                child: Text(widget.maestro == null ? "Crear" : "Actualizar"),
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            padding: const EdgeInsets.all(16.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  Card(
+                    elevation: 4,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        children: [
+                          _buildTextField(
+                            "ID (DNI)",
+                            _idController,
+                            isNumber: true,
+                          ),
+                          const SizedBox(height: 16),
+                          _buildTextField("Nombre completo", _nombreController),
+                          const SizedBox(height: 16),
+                          _buildMultiSelectGrados(),
+                          const SizedBox(height: 16),
+                          _buildTextField(
+                            "Correo electrónico",
+                            _emailController,
+                          ),
+                          const SizedBox(height: 16),
+                          _buildTextField(
+                            "Teléfono",
+                            _telefonoController,
+                            isNumber: true,
+                          ),
+                          const SizedBox(height: 16),
+                          _buildTextField("Usuario", _usuarioController),
+                          const SizedBox(height: 16),
+                          _buildTextFieldContrasena(),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 100), // Espacio para el botón fijo
+                ],
               ),
-            ],
+            ),
           ),
-        ),
+          Positioned(
+            left: 16,
+            right: 16,
+            bottom: 16,
+            child: ElevatedButton(
+              onPressed: _submitForm,
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              child: Text(widget.maestro == null ? "Crear" : "Actualizar"),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -224,6 +263,7 @@ class _CrearMaestroScreenState extends State<CrearMaestroScreen> {
         usuario: _usuarioController.text,
         contrasena: _contrasenaController.text,
         materias: [],
+        fotoPath: '',
       );
 
       baseDatos.agregarMaestro(maestro);

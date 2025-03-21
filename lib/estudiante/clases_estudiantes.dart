@@ -29,7 +29,6 @@ class _ClasesEstudianteScreenState extends State<ClasesEstudianteScreen> {
     obtenerMaestros();
     _clases = widget.alumno.grado.materias;
   }
-  
 
   String _searchQuery = "";
 
@@ -102,6 +101,7 @@ class _ClasesEstudianteScreenState extends State<ClasesEstudianteScreen> {
                           usuario: "",
                           contrasena: "",
                           materias: [],
+                          fotoPath: '',
                         ),
                   );
                   return Card(
@@ -117,9 +117,7 @@ class _ClasesEstudianteScreenState extends State<ClasesEstudianteScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text("Horario: Lunes y Miércoles 10:00 AM"),
-                          Text(
-                            "Maestro: ${maestro.nombre}",
-                          ),
+                          Text("Maestro: ${maestro.nombre}"),
                           Text("Nota: ${widget.alumno.nota}"),
                         ],
                       ),

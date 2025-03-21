@@ -11,6 +11,7 @@ class Alumno {
   final String nota;
   final bool active;
   final String rol = "alumno";
+  final String fotoPath;
 
   Alumno({
     required this.id,
@@ -22,6 +23,7 @@ class Alumno {
     required this.contrasena,
     required this.nota,
     required this.active,
+    required this.fotoPath,
   });
 
   // Convertir a Map para Firestore
@@ -36,6 +38,7 @@ class Alumno {
       "contrasena": contrasena,
       "nota": nota,
       "active": active,
+      "fotoPath": fotoPath,
     };
   }
 
@@ -51,6 +54,7 @@ class Alumno {
       contrasena: data["contrasena"],
       nota: data["nota"],
       active: data["active"],
+      fotoPath: data["fotoPath"],
     );
   }
 }

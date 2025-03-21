@@ -14,22 +14,24 @@ class FirebaseController {
   }
 
   Future<void> verificarConexion() async {
-  try {
-    // Intentar obtener un documento cualquiera de la colección "alumnos"
-    QuerySnapshot querySnapshot =
-        await base.collection('alumnos').limit(1).get();
+    try {
+      // Intentar obtener un documento cualquiera de la colección "alumnos"
+      QuerySnapshot querySnapshot =
+          await base.collection('alumnos').limit(1).get();
 
-    if (querySnapshot.docs.isNotEmpty) {
-      print("✅ Conexión a Firestore exitosa. Documento encontrado: ${querySnapshot.docs.first.data()}");
-    } else {
-      print("⚠️ Conexión establecida, pero no hay alumnos en la base de datos.");
+      if (querySnapshot.docs.isNotEmpty) {
+        print(
+          "✅ Conexión a Firestore exitosa. Documento encontrado: ${querySnapshot.docs.first.data()}",
+        );
+      } else {
+        print(
+          "⚠️ Conexión establecida, pero no hay alumnos en la base de datos.",
+        );
+      }
+    } catch (e) {
+      print("❌ No se pudo conectar a Firestore: $e");
     }
-  } catch (e) {
-    print("❌ No se pudo conectar a Firestore: $e");
   }
-}
-
-
 
   Future<void> agregarAlumno(Alumno alumno) async {
     await base.collection('alumnos').doc(alumno.id).set(alumno.toMap());
@@ -125,18 +127,17 @@ class FirebaseController {
   }
 
   Stream<List<Alumno>> obtenerAlumnosStream() {
-  try {
-    return base.collection('alumnos').snapshots().map((querySnapshot) {
-      return querySnapshot.docs.map((doc) {
-        return Alumno.fromMap(doc.data() as Map<String, dynamic>);
-      }).toList();
-    });
-  } catch (e) {
-    print("Error al obtener alumnos: $e");
-    return Stream.value([]);
+    try {
+      return base.collection('alumnos').snapshots().map((querySnapshot) {
+        return querySnapshot.docs.map((doc) {
+          return Alumno.fromMap(doc.data() as Map<String, dynamic>);
+        }).toList();
+      });
+    } catch (e) {
+      print("Error al obtener alumnos: $e");
+      return Stream.value([]);
+    }
   }
-}
-  
 
   Future<List<Maestro>> obtenerMaestros() async {
     try {
@@ -149,6 +150,19 @@ class FirebaseController {
     } catch (e) {
       print("Error al obtener maestros: $e");
       return [];
+    }
+  }
+
+  Stream<List<Maestro>> obtenerMaestrosStream() {
+    try {
+      return base.collection('maestros').snapshots().map((querySnapshot) {
+        return querySnapshot.docs.map((doc) {
+          return Maestro.fromMap(doc.data() as Map<String, dynamic>);
+        }).toList();
+      });
+    } catch (e) {
+      print("Error al obtener maestros: $e");
+      return Stream.value([]);
     }
   }
 
@@ -246,10 +260,10 @@ class FirebaseController {
   /// ===================================
   /// LOGICA PARA LAS MATERIAS
   /// ===================================
-  Future<void> agregarMateria(Materia materia) async{
+  Future<void> agregarMateria(Materia materia) async {
     await base.collection('materias').doc(materia.id).set(materia.toMap());
   }
-  
+
   Future<List<Materia>> obtenerMaterias() async {
     try {
       QuerySnapshot querySnapshot = await base.collection('materias').get();

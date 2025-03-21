@@ -24,7 +24,7 @@ class _HomeMaestroState extends State<HomeMaestro> {
   List<Widget> get _pages => [
     HomeMaestroContent(maestro: widget.maestro), // Pantalla principal (Inicio)
     const AnunciosScreen(), // Pantalla global de anuncios
-    PerfilScreen(maestro: widget.maestro,), // Pantalla global de perfil
+    PerfilScreen(maestro: widget.maestro), // Pantalla global de perfil
   ];
 
   void _onItemTapped(int index) {
@@ -78,6 +78,10 @@ class HomeMaestroContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Obtener las partes del nombre
+    final nombreParts = maestro.nombre.split(" ");
+    final primerNombre = nombreParts.isNotEmpty ? nombreParts[0] : "";
+
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -91,8 +95,9 @@ class HomeMaestroContent extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Mostrar solo el primer nombre
                   Text(
-                    "Bienvenido, ${maestro.nombre.split(" ")[0]} ${maestro.nombre.split(" ")[2]}",
+                    "Bienvenido, $primerNombre",
                     style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -125,7 +130,10 @@ class HomeMaestroContent extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _buildInfoItem("Clases", maestro.gradosAsignados.length.toString()),
+                _buildInfoItem(
+                  "Clases",
+                  maestro.gradosAsignados.length.toString(),
+                ),
                 _buildInfoItem("Estudiantes", "25"),
               ],
             ),
@@ -154,7 +162,9 @@ class HomeMaestroContent extends StatelessWidget {
                     // Navegar a la pantalla de clases
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => ClasesScreen(maestro: maestro,)),
+                      MaterialPageRoute(
+                        builder: (context) => ClasesScreen(maestro: maestro),
+                      ),
                     );
                   }),
                   const SizedBox(height: 16),

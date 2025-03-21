@@ -84,47 +84,88 @@ class _CrearEstudianteScreenState extends State<CrearEstudianteScreen> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              _buildTextField("ID (DNI)", _idController, isNumber: true),
-              const SizedBox(height: 16),
-              _buildTextField("Nombre completo", _nombreController),
-              const SizedBox(height: 16),
-              _buildDropdown("Grado", _grados, _gradoSeleccionado, (value) {
-                setState(() {
-                  _gradoSeleccionado = value;
-                });
-              }),
-              const SizedBox(height: 16),
-              _buildTextField("Correo electrónico", _emailController),
-              const SizedBox(height: 16),
-              _buildTextField("Teléfono", _telefonoController, isNumber: true),
-              const SizedBox(height: 16),
-              _buildTextField("Usuario", _usuarioController),
-              const SizedBox(height: 16),
-              _buildTextFieldContrasena(),
-              const SizedBox(height: 16),
-              SwitchListTile(
-                title: const Text("Activo"),
-                value: _active,
-                onChanged: (value) {
-                  setState(() {
-                    _active = value;
-                  });
-                },
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            padding: const EdgeInsets.all(16.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  Card(
+                    elevation: 4,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        children: [
+                          _buildTextField(
+                            "ID (DNI)",
+                            _idController,
+                            isNumber: true,
+                          ),
+                          const SizedBox(height: 16),
+                          _buildTextField("Nombre completo", _nombreController),
+                          const SizedBox(height: 16),
+                          _buildDropdown("Grado", _grados, _gradoSeleccionado, (
+                            value,
+                          ) {
+                            setState(() {
+                              _gradoSeleccionado = value;
+                            });
+                          }),
+                          const SizedBox(height: 16),
+                          _buildTextField(
+                            "Correo electrónico",
+                            _emailController,
+                          ),
+                          const SizedBox(height: 16),
+                          _buildTextField(
+                            "Teléfono",
+                            _telefonoController,
+                            isNumber: true,
+                          ),
+                          const SizedBox(height: 16),
+                          _buildTextField("Usuario", _usuarioController),
+                          const SizedBox(height: 16),
+                          _buildTextFieldContrasena(),
+                          const SizedBox(height: 16),
+                          SwitchListTile(
+                            title: const Text("Activo"),
+                            value: _active,
+                            onChanged: (value) {
+                              setState(() {
+                                _active = value;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 100), // Espacio para el botón fijo
+                ],
               ),
-              const SizedBox(height: 32), // Espacio adicional antes del botón
-              ElevatedButton(
-                onPressed: _submitForm,
-                child: Text(widget.estudiante == null ? "Crear" : "Actualizar"),
-              ),
-            ],
+            ),
           ),
-        ),
+          Positioned(
+            left: 16,
+            right: 16,
+            bottom: 16,
+            child: ElevatedButton(
+              onPressed: _submitForm,
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              child: Text(widget.estudiante == null ? "Crear" : "Actualizar"),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -227,6 +268,7 @@ class _CrearEstudianteScreenState extends State<CrearEstudianteScreen> {
         contrasena: _contrasenaController.text,
         active: _active,
         nota: '',
+        fotoPath: '',
       );
 
       baseDatos.agregarAlumno(estudiante);

@@ -71,29 +71,60 @@ class _CrearGradoScreenState extends State<CrearGradoScreen> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              _buildTextField("ID", _idController),
-              const SizedBox(height: 16),
-              _buildTextField("Nombre del grado", _nombreController),
-              const SizedBox(height: 16),
-              _buildDropdownJornada(),
-              const SizedBox(height: 16),
-              _buildMultiSelectMaterias(),
-              const SizedBox(height: 16),
-              _buildMultiSelectMaestros(),
-              const SizedBox(height: 32), // Espacio adicional antes del botón
-              ElevatedButton(
-                onPressed: _submitForm,
-                child: Text(widget.grado == null ? "Crear" : "Actualizar"),
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            padding: const EdgeInsets.all(16.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  Card(
+                    elevation: 4,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        children: [
+                          _buildTextField("ID", _idController),
+                          const SizedBox(height: 16),
+                          _buildTextField(
+                            "Nombre del grado",
+                            _nombreController,
+                          ),
+                          const SizedBox(height: 16),
+                          _buildDropdownJornada(),
+                          const SizedBox(height: 16),
+                          _buildMultiSelectMaterias(),
+                          const SizedBox(height: 16),
+                          _buildMultiSelectMaestros(),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 100), // Espacio para el botón fijo
+                ],
               ),
-            ],
+            ),
           ),
-        ),
+          Positioned(
+            left: 16,
+            right: 16,
+            bottom: 16,
+            child: ElevatedButton(
+              onPressed: _submitForm,
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              child: Text(widget.grado == null ? "Crear" : "Actualizar"),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -140,6 +171,7 @@ class _CrearGradoScreenState extends State<CrearGradoScreen> {
         const Text("Materias", style: TextStyle(fontSize: 16)),
         DropdownButtonFormField<Materia>(
           value: null,
+          menuMaxHeight: 200, // Limitar la altura del menú
           decoration: InputDecoration(
             labelText: "Seleccione una materia",
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
@@ -194,6 +226,7 @@ class _CrearGradoScreenState extends State<CrearGradoScreen> {
         const Text("Maestros", style: TextStyle(fontSize: 16)),
         DropdownButtonFormField<Maestro>(
           value: null,
+          menuMaxHeight: 200, // Limitar la altura del menú
           decoration: InputDecoration(
             labelText: "Seleccione un maestro",
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),

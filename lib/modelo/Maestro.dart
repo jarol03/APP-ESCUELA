@@ -12,6 +12,7 @@ class Maestro {
   final String contrasena;
   List<Materia> materias; // Lista de objetos Materia
   final String rol = "maestro";
+  final String fotoPath;
 
   Maestro({
     required this.id,
@@ -23,6 +24,7 @@ class Maestro {
     required this.usuario,
     required this.contrasena,
     required this.materias,
+    required this.fotoPath,
   });
 
   // Convertir a Map para Firestore
@@ -38,6 +40,7 @@ class Maestro {
       "contrasena": contrasena,
       "rol": rol,
       "materias": materias.map((m) => m.toMap()).toList(),
+      "fotoPath": fotoPath,
     };
   }
 
@@ -57,6 +60,7 @@ class Maestro {
       contrasena: data["contrasena"],
       materias:
           (data["materias"] as List).map((m) => Materia.fromMap(m)).toList(),
+      fotoPath: data["fotoPath"],
     );
   }
 }

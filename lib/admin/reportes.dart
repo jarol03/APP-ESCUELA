@@ -37,7 +37,6 @@ class _ReportesScreenState extends State<ReportesScreen> {
     obtenerAlumnos();
     obtenerMaestros();
   }
-  
 
   final List<Materia> _materias = [
     Materia(
@@ -48,7 +47,6 @@ class _ReportesScreenState extends State<ReportesScreen> {
     Materia(id: "2", nombre: "Ciencias", descripcion: "Clase de ciencias"),
     // Agregar más materias aquí
   ];
-
 
   Alumno? _estudianteSeleccionado;
   Maestro? _maestroSeleccionado;
@@ -69,6 +67,7 @@ class _ReportesScreenState extends State<ReportesScreen> {
               contrasena: "",
               nota: "",
               active: false,
+              fotoPath: '',
             ),
       );
     });
@@ -249,7 +248,9 @@ class _ReportesScreenState extends State<ReportesScreen> {
                       Text("Materias inscritas:"),
                       Column(
                         children:
-                            _estudianteSeleccionado!.grado.materias.map((materiaId) {
+                            _estudianteSeleccionado!.grado.materias.map((
+                              materiaId,
+                            ) {
                               final materia = _materias.firstWhere(
                                 (m) => m.id == materiaId,
                                 orElse:
