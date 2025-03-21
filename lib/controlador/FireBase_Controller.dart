@@ -248,23 +248,36 @@ class FirebaseController {
   }
 
   Future<List<Anuncio>> obtenerAnuncios() async {
-  try {
-    QuerySnapshot querySnapshot = await base
+    try {
+      QuerySnapshot querySnapshot =
+          await base
+              .collection('anuncios')
+              .orderBy('fecha', descending: true)
+              .get();
+
+      List<Anuncio> anuncios =
+          querySnapshot.docs.map((doc) {
+            return Anuncio.fromMap(doc.data() as Map<String, dynamic>);
+          }).toList();
+
+      return anuncios;
+    } catch (e) {
+      print("Error al obtener anuncios: $e");
+      return [];
+    }
+  }
+
+  Stream<List<Anuncio>> obtenerAnunciosStream() {
+    return FirebaseFirestore.instance
         .collection('anuncios')
         .orderBy('fecha', descending: true)
-        .get();
-
-    List<Anuncio> anuncios = querySnapshot.docs.map((doc) {
-      return Anuncio.fromMap(doc.data() as Map<String, dynamic>);
-    }).toList();
-
-    return anuncios;
-  } catch (e) {
-    print("Error al obtener anuncios: $e");
-    return [];
+        .snapshots()
+        .map((querySnapshot) {
+          return querySnapshot.docs.map((doc) {
+            return Anuncio.fromMap(doc.data() as Map<String, dynamic>);
+          }).toList();
+        });
   }
-}
-
 
   /// ===================================
   /// LOGICA PARA LAS MATERIAS
