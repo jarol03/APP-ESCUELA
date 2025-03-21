@@ -92,15 +92,15 @@ class _CrearAnuncioScreenState extends State<CrearAnuncioScreen> {
                 },
               ),
               const SizedBox(height: 16),
-              SwitchListTile(
-                title: const Text("Enviar notificación push"),
-                value: _enviarNotificacion,
-                onChanged: (value) {
-                  setState(() {
-                    _enviarNotificacion = value;
-                  });
-                },
-              ),
+              // SwitchListTile(
+              //   title: const Text("Enviar notificación push"),
+              //   value: _enviarNotificacion,
+              //   onChanged: (value) {
+              //     setState(() {
+              //       _enviarNotificacion = value;
+              //     });
+              //   },
+              // ),
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: _guardarAnuncio,
