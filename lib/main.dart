@@ -47,8 +47,10 @@ class _PantallaCargaState extends State<PantallaCarga> {
   @override
   void initState() {
     super.initState();
-    Materia matematicas = Materia(id: "01", nombre: "Matemáticas", descripcion: "Clase de matemáticas");
-    baseDatos.agregarMateria(matematicas);
+    // baseDatos.guardarFotoEnFirestore(
+    //   "https://www.bing.com/images/search?view=detailV2&ccid=X7Nwwzjd&id=BD401B1D5C24C13BD9524AC230F42FB1AA639682&thid=OIP.X7NwwzjdZ6a_8JKshwNuiAHaE7&mediaurl=https%3a%2f%2fimage.cnbcfm.com%2fapi%2fv1%2fimage%2f107168566-1671481983597-gettyimages-1450398458-mj1_4451_ce4b38b2-9f26-404e-b214-cf8454d82d0f.jpeg&cdnurl=https%3a%2f%2fth.bing.com%2fth%2fid%2fR.5fb370c338dd67a6bff092ac87036e88%3frik%3dgpZjqrEv9DDCSg%26pid%3dImgRaw%26r%3d0&exph=3337&expw=5006&q=messi&simid=608024897490262940&FORM=IRPRST&ck=CC369AE20349DB26DD11CA27878A2D69&selectedIndex=0&itb=0",
+    //   alumnoId: "123"
+    // );
     print("Pantalla de carga iniciada");
     _verificarSesion();
   }

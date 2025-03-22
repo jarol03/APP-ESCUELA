@@ -268,7 +268,7 @@ class _CrearEstudianteScreenState extends State<CrearEstudianteScreen> {
         contrasena: _contrasenaController.text,
         active: _active,
         nota: '',
-        fotoPath: '',
+        fotoPath: widget.estudiante!.fotoPath,
       );
 
       baseDatos.agregarAlumno(estudiante);

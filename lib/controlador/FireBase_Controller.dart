@@ -299,4 +299,26 @@ class FirebaseController {
       return [];
     }
   }
+
+  /// ===================================
+  /// LOGICA PARA LAS FOTOS
+  /// ===================================
+  // Método para guardar la foto en Firestore
+  Future<void> guardarFotoEnFirestore(
+    String fotoPath, {
+    String? alumnoId,
+    String? maestroId,
+  }) async {
+    if (maestroId != null) {
+      // Actualizar la foto del maestro en Firestore
+      await base.collection('maestros').doc(maestroId).update({
+        'fotoPath': fotoPath,
+      });
+    } else if (alumnoId != null) {
+      // Actualizar la foto del alumno en Firestore
+      await base.collection('alumnos').doc(alumnoId).update({
+        'fotoPath': fotoPath,
+      });
+    }
+  }
 }

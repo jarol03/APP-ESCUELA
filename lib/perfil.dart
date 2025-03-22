@@ -1,3 +1,4 @@
+import 'package:avance1/controlador/FireBase_Controller.dart';
 import 'package:flutter/material.dart';
 import 'package:avance1/modelo/Maestro.dart';
 import 'package:avance1/modelo/Alumno.dart';
@@ -6,10 +7,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:io'; // Importar para manejar archivos locales
 
 class PerfilScreen extends StatefulWidget {
-  final Maestro? maestro;
-  final Alumno? alumno;
+  final String? alumnoId;
+  final String? maestroId;
 
-  const PerfilScreen({super.key, this.maestro, this.alumno});
+  const PerfilScreen({super.key, this.maestroId, this.alumnoId});
 
   @override
   _PerfilScreenState createState() => _PerfilScreenState();
@@ -18,7 +19,27 @@ class PerfilScreen extends StatefulWidget {
 class _PerfilScreenState extends State<PerfilScreen> {
   final ImagePicker _picker = ImagePicker();
   File? _imagenSeleccionada;
+  FirebaseController baseDatos = FirebaseController();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  Maestro? maestro;
+  Alumno? alumno;
+
+  @override
+  void initState() {
+    super.initState();
+    obtenerAlumnoOMaestro();
+  }
+
+  Future<void> obtenerAlumnoOMaestro() async {
+    if (widget.alumnoId != null) {
+      alumno = await baseDatos.buscarAlumnoPorId(widget.alumnoId!);
+    } else if (widget.maestroId != null) {
+      maestro = await baseDatos.buscarMaestroPorId(widget.maestroId!);
+    }
+
+    setState(() {}); // Actualizar la UI después de obtener los datos
+  }
 
   Future<void> _seleccionarFoto() async {
     final XFile? imagen = await _picker.pickImage(source: ImageSource.gallery);
@@ -29,18 +50,29 @@ class _PerfilScreenState extends State<PerfilScreen> {
 
       // Guardar la ruta de la imagen en Firestore
       await _guardarFotoEnFirestore(_imagenSeleccionada!.path);
+      print("IMAGEN ACTUALIZADA: " + _imagenSeleccionada!.path);
     }
   }
 
+  String _formatearNombre(String nombreCompleto) {
+    List<String> partes = nombreCompleto.split(
+      " ",
+    ); // Divide el nombre en partes
+    if (partes.length >= 2) {
+      return "${partes[0]} ${partes.last}"; // Primer nombre + último apellido
+    }
+    return nombreCompleto;
+  }
+
   Future<void> _guardarFotoEnFirestore(String fotoPath) async {
-    if (widget.maestro != null) {
+    if (maestro != null) {
       // Actualizar la foto del maestro en Firestore
-      await _firestore.collection('maestros').doc(widget.maestro!.id).update({
+      await _firestore.collection('maestros').doc(maestro!.id).update({
         'fotoPath': fotoPath,
       });
-    } else if (widget.alumno != null) {
+    } else if (alumno != null) {
       // Actualizar la foto del alumno en Firestore
-      await _firestore.collection('alumnos').doc(widget.alumno!.id).update({
+      await _firestore.collection('alumnos').doc(alumno!.id).update({
         'fotoPath': fotoPath,
       });
     }
@@ -50,14 +82,16 @@ class _PerfilScreenState extends State<PerfilScreen> {
   Widget build(BuildContext context) {
     // Obtener la foto del usuario según su rol
     String fotoPath;
-    if (widget.maestro != null) {
-      fotoPath =
-          widget.maestro!.fotoPath; // Usar la ruta de la foto del maestro
-    } else if (widget.alumno != null) {
-      fotoPath = widget.alumno!.fotoPath; // Usar la ruta de la foto del alumno
+    if (maestro != null) {
+      fotoPath = maestro!.fotoPath; // Usar la ruta de la foto del maestro
+    } else if (alumno != null) {
+      fotoPath = alumno!.fotoPath; // Usar la ruta de la foto del alumno
     } else {
       fotoPath = "assets/images/profile.jpg"; // Foto por defecto
     }
+
+    print("********************** FOTO **********************");
+    print(fotoPath);
 
     return Scaffold(
       appBar: AppBar(
@@ -120,8 +154,8 @@ class _PerfilScreenState extends State<PerfilScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                if (widget.maestro != null) _buildMaestroInfo(widget.maestro!),
-                if (widget.alumno != null) _buildAlumnoInfo(widget.alumno!),
+                if (maestro != null) _buildMaestroInfo(maestro!),
+                if (alumno != null) _buildAlumnoInfo(alumno!),
               ],
             ),
           ),
@@ -133,7 +167,7 @@ class _PerfilScreenState extends State<PerfilScreen> {
   Widget _buildMaestroInfo(Maestro maestro) {
     return Column(
       children: [
-        _buildInfoRow("Nombre", maestro.nombre),
+        _buildInfoRow("Nombre", _formatearNombre(maestro.nombre)),
         _buildInfoRow("Email", maestro.email),
         _buildInfoRow("Teléfono", maestro.telefono),
         _buildInfoRow(
@@ -151,7 +185,7 @@ class _PerfilScreenState extends State<PerfilScreen> {
   Widget _buildAlumnoInfo(Alumno alumno) {
     return Column(
       children: [
-        _buildInfoRow("Nombre", alumno.nombre),
+        _buildInfoRow("Nombre", _formatearNombre(alumno.nombre)),
         _buildInfoRow("Email", alumno.email),
         _buildInfoRow("Teléfono", alumno.telefono),
         _buildInfoRow("Grado", alumno.grado.nombre),

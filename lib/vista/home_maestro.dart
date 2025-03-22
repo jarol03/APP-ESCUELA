@@ -24,7 +24,7 @@ class _HomeMaestroState extends State<HomeMaestro> {
   List<Widget> get _pages => [
     HomeMaestroContent(maestro: widget.maestro), // Pantalla principal (Inicio)
     const AnunciosScreen(), // Pantalla global de anuncios
-    PerfilScreen(maestro: widget.maestro), // Pantalla global de perfil
+    PerfilScreen(maestroId: widget.maestro.id), // Pantalla global de perfil
   ];
 
   void _onItemTapped(int index) {

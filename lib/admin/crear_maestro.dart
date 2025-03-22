@@ -263,7 +263,7 @@ class _CrearMaestroScreenState extends State<CrearMaestroScreen> {
         usuario: _usuarioController.text,
         contrasena: _contrasenaController.text,
         materias: [],
-        fotoPath: '',
+        fotoPath: widget.maestro!.fotoPath,
       );
 
       baseDatos.agregarMaestro(maestro);

@@ -29,7 +29,7 @@ class _HomeEstudianteState extends State<HomeEstudiante> {
     _pages = [
       HomeEstudianteContent(alumno: widget.alumno,), // Pantalla principal (Inicio)
       const AnunciosScreen(), // Pantalla global de anuncios
-      PerfilScreen(alumno: widget.alumno), // Pantalla global de perfil
+      PerfilScreen(alumnoId: widget.alumno.id), // Pantalla global de perfil
     ];
   }
 
