@@ -172,7 +172,7 @@ class _PerfilScreenState extends State<PerfilScreen> {
         _buildInfoRow("Teléfono", maestro.telefono),
         _buildInfoRow(
           "Grados Asignados",
-          maestro.gradosAsignados.map((m) => m.nombre).join(", "),
+          maestro.gradosAsignados.map((m) => m.id).join(", "),
         ),
         _buildInfoRow(
           "Materias",

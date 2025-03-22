@@ -168,15 +168,15 @@ class HomeMaestroContent extends StatelessWidget {
                     );
                   }),
                   const SizedBox(height: 16),
-                  _buildTaskRow(context, Icons.assignment, "Notas", () {
-                    // Navegar a la pantalla de notas
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => NotasMaestroScreen(),
-                      ),
-                    );
-                  }),
+                  // _buildTaskRow(context, Icons.assignment, "Notas", () {
+                  //   // Navegar a la pantalla de notas
+                  //   Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //       builder: (context) => ChatBotScreen(),
+                  //     ),
+                  //   );
+                  // }),
                 ],
               ),
             ),

@@ -93,21 +93,21 @@ class _ClasesScreenState extends State<ClasesScreen> {
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          IconButton(
-                            icon: const Icon(Icons.person),
-                            onPressed: () => _mostrarAlumnos(grado),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.add),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => NotasMaestroScreen(),
-                                ),
-                              );
-                            },
-                          ),
+                          // IconButton(
+                          //   icon: const Icon(Icons.person),
+                          //   onPressed: () => _mostrarAlumnos(grado),
+                          // ),
+                          // IconButton(
+                          //   icon: const Icon(Icons.add),
+                          //   onPressed: () {
+                          //     Navigator.push(
+                          //       context,
+                          //       MaterialPageRoute(
+                          //         builder: (context) => ChatBotScreen(),
+                          //       ),
+                          //     );
+                          //   },
+                          // ),
                         ],
                       ),
                     ),
