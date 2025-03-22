@@ -211,17 +211,17 @@ class _HomeAdminContentState extends State<HomeAdminContent> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  _buildTaskRow(
-                    context,
-                    Icons.bar_chart,
-                    "Reportes",
-                    () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const ReportesScreen(),
-                      ),
-                    ),
-                  ),
+                  // _buildTaskRow(
+                  //   context,
+                  //   Icons.bar_chart,
+                  //   "Reportes",
+                  //   () => Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //       builder: (context) => const ReportesScreen(),
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
             ),

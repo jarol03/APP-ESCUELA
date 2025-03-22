@@ -81,6 +81,7 @@ class HomeMaestroContent extends StatelessWidget {
     // Obtener las partes del nombre
     final nombreParts = maestro.nombre.split(" ");
     final primerNombre = nombreParts.isNotEmpty ? nombreParts[0] : "";
+    final primerLetra = maestro.nombre[0];
 
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -110,9 +111,12 @@ class HomeMaestroContent extends StatelessWidget {
                   ),
                 ],
               ),
-              const CircleAvatar(
+              CircleAvatar(
                 radius: 30,
-                backgroundImage: AssetImage("assets/profile.jpg"),
+                child: Text(
+                  primerLetra, // Aquí es donde se usa la letra dinámica
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                ),
               ),
             ],
           ),

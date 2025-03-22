@@ -156,6 +156,7 @@ class _PerfilScreenState extends State<PerfilScreen> {
                 const SizedBox(height: 20),
                 if (maestro != null) _buildMaestroInfo(maestro!),
                 if (alumno != null) _buildAlumnoInfo(alumno!),
+                if(alumno == null && maestro == null) _buildInfoRow("Nombre:", "Admin")
               ],
             ),
           ),
